@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Consultas - SaludMe</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+
+      body {
+    background-color: #f4e2dc;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-setif;
+    background-color: var(--blanco);
+    color: var(--blanco);
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+        
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+
+        .container-consultas {
+            max-width: 1000px;
+            margin: 150px auto 60px auto; /* más espacio arriba y abajo */
+            padding: 20px;
+            background-color: var(--blanco);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--verde-oscuro);
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--verde);
+            display: inline-block;
+            padding-bottom: 10px;
+            width: auto; /* Ajusta el ancho al contenido */
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 1px 1px 2px var(--sombra);
+        }
+
+        .consultas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .consulta-card {
+            background-color: var(--gris-claro);
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 25px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .consulta-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .consulta-card h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--negro);
+            margin-bottom: 15px;
+        }
+
+        .consulta-card p {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .consulta-card strong {
+            color: var(--verde-oscuro);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .status-badge.pendiente {
+            background-color: #ffeb3b; /* Amarillo */
+            color: #795548;
+        }
+
+        .status-badge.aceptada {
+            background-color: #4caf50; /* Verde */
+            color: var(--blanco);
+        }
+
+        .status-badge.rechazada {
+            background-color: #f44336; /* Rojo */
+            color: var(--blanco);
+        }
+
+        .no-consultas-message {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--gris-medio);
+            padding: 30px;
+            background-color: var(--gris-claro);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+               .btn{
+    background-color: var(--blanco);
+    color: var(--verde);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+    </style>
+
+    
+
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('paciente.dashboard_paciente') }}">SALUDME</a> {# O podrías enviarlo a la ruta de login si es la página principal del sitio #}
+        <ul class="nav-links">
+            <li class="nav-item">
+                   <a class="nav-link " aria-current="page" href="{{ url_for('paciente.dashboard_paciente') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('paciente.recetas_productos', filter='recetas') }}">Recetas</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                {# CAMBIO: Enlaza a la lista de consultas del paciente #}
+                <a class="nav-link " href="{{ url_for('paciente.mis_consultas') }}">Consulta</a> {# Apunta a solicitar cita #}
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <a class="nav-link  active" href="{{ url_for('paciente.mi_progreso') }}">Cuenta</a>
+            </li>
+        </ul>
+            {# CAMBIO: Formulario de búsqueda transformado en botón de Cerrar Sesión #}
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST"> {# Asumiendo una ruta de logout en 'auth' Blueprint #}
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+    <div class="container-consultas">
+        <h2 class="section-title">Mis Consultas Agendadas</h2>
+
+        <div class="consultas-grid">
+            {% if consultas %}
+                {% for consulta in consultas %}
+                <div class="consulta-card">
+                    <h4>Cita con {{ consulta.profesional.nombre }} {{ consulta.profesional.apellido_P }}</h4>
+                    <p><strong>Fecha:</strong> {{ consulta.fecha.strftime('%d/%m/%Y') }}</p>
+                    <p><strong>Hora:</strong> {{ consulta.hora.strftime('%H:%M') }}</p>
+                    <p><strong>Estado:</strong>
+                        <span class="status-badge {{ consulta.estado.lower() }}">
+                            {{ consulta.estado }}
+                        </span>
+                    </p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-consultas-message">No tienes consultas agendadas en este momento.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+
+#team-section * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+
+#team-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5; /* Background specific to this section */
+    overflow: hidden; /* Important for carousel overflow */
+    position: relative; /* For the absolute positioning of the title */
+    padding: 80px 20px; /* Add some padding so content isn't stuck to edges */
+}
+
+
+/* --- About Title --- */
+#team-section .about-title {
+    font-size: 7.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    position: absolute; /* Keep absolute if it's meant to be partially off-screen */
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    white-space: nowrap;
+    font-family: "Arial Black", "Arial Bold", Arial, sans-serif;
+    background: linear-gradient(
+        to bottom,
+        rgba(14, 158, 26, 0.463) 30%,
+        rgb(255 255 255 / 0%) 76%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    z-index: 0; /* Ensure it's behind carousel elements if they overlap */
+}
+
+/* --- Carousel Container --- */
+#team-section .carousel-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 450px;
+    position: relative;
+    perspective: 1000px;
+    margin-top: 80px; /* Adjust spacing from the title */
+    z-index: 1; /* Ensure carousel is above the title text */
+}
+
+/* --- Carousel Track --- */
+#team-section .carousel-track {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* --- Card Styles --- */
+#team-section .card {
+    position: absolute;
+    width: 280px;
+    height: 380px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+}
+
+#team-section .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Card States */
+#team-section .card.center {
+    z-index: 10;
+    transform: scale(1.1) translateZ(0);
+}
+
+#team-section .card.center img {
+    filter: none;
+}
+
+#team-section .card.left-2 {
+    z-index: 1;
+    transform: translateX(-400px) scale(0.8) translateZ(-300px);
+    opacity: 0.7;
+}
+
+#team-section .card.left-2 img {
+    filter: grayscale(100%);
+}
+
+#team-section .card.left-1 {
+    z-index: 5;
+    transform: translateX(-200px) scale(0.9) translateZ(-100px);
+    opacity: 0.9;
+}
+
+#team-section .card.left-1 img {
+    filter: grayscale(100%);
+}
+
+#team-section .card.right-1 {
+    z-index: 5;
+    transform: translateX(200px) scale(0.9) translateZ(-100px);
+    opacity: 0.9;
+}
+
+#team-section .card.right-1 img {
+    filter: grayscale(100%);
+}
+
+#team-section .card.right-2 {
+    z-index: 1;
+    transform: translateX(400px) scale(0.8) translateZ(-300px);
+    opacity: 0.7;
+}
+
+#team-section .card.right-2 img {
+    filter: grayscale(100%);
+}
+
+#team-section .card.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- Member Info --- */
+#team-section .member-info {
+    text-align: center;
+    margin-top: 40px;
+    transition: all 0.5s ease-out;
+}
+
+#team-section .member-name {
+    color: #4CAF50;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+#team-section .member-name::before,
+#team-section .member-name::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    width: 100px;
+    height: 2px;
+    background: #4CAF50;
+}
+
+#team-section .member-name::before {
+    left: -120px;
+}
+
+#team-section .member-name::after {
+    right: -120px;
+}
+
+#team-section .member-role {
+    color: #4CAF50;
+    font-size: 1.5rem;
+    font-weight: 500;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 10px 0;
+    margin-top: -15px;
+    position: relative;
+}
+
+/* --- Dots Navigation --- */
+#team-section .dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 60px;
+}
+
+#team-section .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(8, 42, 123, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#team-section .dot.active {
+    background: #4CAF50;
+
+    transform: scale(1.2);
+}
+
+/* --- Navigation Arrows --- */
+#team-section .nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #4CAF50;
+    color: #4CAF50;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.3s ease;
+    font-size: 1.5rem;
+    border: none;
+    outline: none;
+    padding-bottom: 4px;
+}
+
+#team-section .nav-arrow:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+#team-section .nav-arrow.left {
+    left: 20px;
+    padding-right: 3px;
+}
+
+#team-section .nav-arrow.right {
+    right: 20px;
+    padding-left: 3px;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    #team-section .about-title {
+        font-size: 4.5rem;
+    }
+
+    #team-section .card {
+        width: 200px;
+        height: 280px;
+    }
+
+    #team-section .card.left-2 {
+        transform: translateX(-250px) scale(0.8) translateZ(-300px);
+    }
+
+    #team-section .card.left-1 {
+        transform: translateX(-120px) scale(0.9) translateZ(-100px);
+    }
+
+    #team-section .card.right-1 {
+        transform: translateX(120px) scale(0.9) translateZ(-100px);
+    }
+
+    #team-section .card.right-2 {
+        transform: translateX(250px) scale(0.8) translateZ(-300px);
+    }
+
+    #team-section .member-name {
+        font-size: 2rem;
+    }
+
+    #team-section .member-role {
+        font-size: 1.2rem;
+    }
+
+    #team-section .member-name::before,
+    #team-section .member-name::after {
+        width: 50px;
+    }
+
+    #team-section .member-name::before {
+        left: -70px;
+    }
+
+    #team-section .member-name::after {
+        right: -70px;
+    }
+}

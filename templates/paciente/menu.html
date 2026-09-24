@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas y Productos - SaludMe</title>
+
+    <!-- CSS locales correctamente enlazados -->
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tarjetas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fondomenu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+
+    <!-- Fuentes y librerías externas -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <style>
+    
+
+      body {
+    background-color: #f4e2dc;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-setif;
+    background-color: var(--blanco);
+    color: var(--blanco);
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+        
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+
+
+.decora2 {
+    position: relative;
+    bottom: 350px;
+    margin-left: 0;
+    left: 60%; /* Ajusta según el diseño */
+    padding: 0;
+    height: auto;
+    width: auto;
+    max-width: 800px;
+    background: none;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+}
+
+.decora2 img { 
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 0;
+}
+
+        .modal-content {
+            border-radius: 15px;
+            background-color: var(--import); /* Fondo del modal */
+            color: var(--negro); /* Color del texto general del modal */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            background-color: var(--verde); /* Color de fondo del encabezado del modal */
+            color: var(--blanco); /* Color del texto del encabezado */
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            border-bottom: none; /* Eliminar borde inferior por defecto */
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-body label {
+            color: var(--negro); /* Color de las etiquetas */
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .modal-body .form-control {
+            border-radius: 8px;
+            border: 1px solid var(--gris-medio);
+            padding: 10px 15px;
+            color: var(--negro);
+            background-color: var(--blanco);
+        }
+
+        .modal-body .form-control::placeholder {
+            color: var(--gris-medio);
+        }
+
+        .modal-footer {
+            border-top: none; /* Eliminar borde superior por defecto */
+            padding: 15px 25px;
+            background-color: var(--import); /* Fondo del pie de página del modal */
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .modal-footer .btn {
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: var(--verde-oscuro);
+            border-color: var(--verde-oscuro);
+            color: var(--blanco);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #256a29; /* Un tono un poco más oscuro al pasar el ratón */
+            border-color: #256a29;
+        }
+
+        .btn-secondary {
+            background-color: var(--gris-medio);
+            border-color: var(--gris-medio);
+            color: var(--blanco);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7a7a7a;
+            border-color: #7a7a7a;
+        }
+
+        /* Estilos para los resultados del IMC */
+        #resultadoImc, #clasificacionImc {
+            color: var(--verde-oscuro);
+            font-size: 1.1em;
+
+
+        }
+
+               .btn{
+    background-color: var(--blanco);
+    color: var(--verde);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+    </style>
+
+    
+
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('paciente.dashboard_paciente') }}">SALUDME</a> {# O podrías enviarlo a la ruta de login si es la página principal del sitio #}
+        <ul class="nav-links">
+            <li class="nav-item">
+                   <a class="nav-link  active " aria-current="page" href="{{ url_for('paciente.dashboard_paciente') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="{{ url_for('paciente.recetas_productos', filter='recetas') }}">Recetas</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                {# CAMBIO: Enlaza a la lista de consultas del paciente #}
+                <a class="nav-link" href="{{ url_for('paciente.solicitar_cita') }}">Consulta</a> {# Apunta a solicitar cita #}
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <a class="nav-link" href="{{ url_for('paciente.mi_progreso') }}">Cuenta</a>
+            </li>
+        </ul>
+            {# CAMBIO: Formulario de búsqueda transformado en botón de Cerrar Sesión #}
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST"> {# Asumiendo una ruta de logout en 'auth' Blueprint #}
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="cuadrocafe">
+            <div class="container"> 
+                <h2>Tu Plan Personalizado para una</h2>
+                <h1>Vida Saludable</h1>
+                <p>
+                    Evalúa tu estado físico con nuestro test gratuito. Obtén planes alimenticios personalizados, productos recomendados y consultas con nutricionistas que te acompañarán en tu progreso
+                    ¡Empieza hoy tu camino hacia una vida más saludable!
+                </p>
+                {# CAMBIO: Botón "Realizar Test" para JavaScript con id="openTestModalBtn" #}
+                <button type="button" id="openTestModalBtn" class="btn btn-custom">Realizar Test</button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="imcModal" tabindex="-1" aria-labelledby="imcModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imcModalLabel" style="color: var(--blanco);">Calculadora de IMC</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="pesoInput" class="form-label">Peso (kg):</label>
+          <input type="number" class="form-control" id="pesoInput" placeholder="Ej: 70" step="0.1">
+        </div>
+        <div class="mb-3">
+          <label for="alturaInput" class="form-label">Altura (metros):</label>
+          <input type="number" class="form-control" id="alturaInput" placeholder="Ej: 1.75" step="0.01">
+        </div>
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-primary" id="calcularImcBtn">Calcular IMC</button>
+        </div>
+        <div class="mt-4">
+          <h6>Tu IMC: <span id="resultadoImc" class="fw-bold">--</span></h6>
+          <h6>Clasificación: <span id="clasificacionImc" class="fw-bold">--</span></h6>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+        <div class="decora2">
+            <img src="{{ url_for('static', filename='SALUD.jpg') }}" alt="Comida Saludable">
+        </div>
+
+        <section class="products-section">
+            <div class="carousel-container">
+                <div class="products-grid" id="productsGrid">
+                    <div class="product-card">
+                        <img src="{{ url_for('static', filename='CONSULTA.jpg') }}" alt="Imagen de Consulta">
+                        <div class="product-card-content">
+                            <h5 style="color: #212121">Agenda tus citas personalizadas para un seguimiento completo</h5>
+                            {# CAMBIO: "Agendar" ahora apunta a la ruta para solicitar una cita como paciente #}
+                            <a href="{{ url_for('paciente.solicitar_cita') }}" class="btn-view-recipes mt-5">Agendar</a>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="{{ url_for('static', filename='PROGRESO.jpg') }}" alt="Imagen de Progreso">
+                        <div class="product-card-content">
+                            <h5 style="color: #212121">Visualiza tus avances y dietas propuesta por tu nutricionista</h5>
+                            {# CAMBIO: "Ver más" (Progreso) ahora apunta a la ruta de progreso del paciente #}
+                            <a href="{{ url_for('paciente.mi_progreso') }}" class="btn-view-recipes mt-5">Ver más</a>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="{{ url_for('static', filename='recetas.jpg') }}" alt="Imagen de Recetas">
+                        <div class="product-card-content">
+                            <h5 style="color: #212121">Accede a un recetario delicioso y nutritivo para tu dieta</h5>
+                            {# "Ver más" (Recetas) se mantiene #}
+                           <a href="{{ url_for('paciente.recetas_productos', filter='recetas') }}" class="btn-view-recipes mt-5">Ver más</a>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="{{ url_for('static', filename='productos.jpg') }}" alt="Imagen de Productos">
+                        <div class="product-card-content">
+                            <h5 style="color: #212121">Descubre suplementos y artículos para potenciar tu bienestar</h5>
+                            {# "Ver más" (Productos) se mantiene #}
+                            <a style="color: #56946df1;" href="{{ url_for('paciente.recetas_productos', filter='productos') }}" class="btn-view-recipes mt-5">Ver más</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const openTestModalBtn = document.getElementById('openTestModalBtn');
+    const imcModal = new bootstrap.Modal(document.getElementById('imcModal'));
+    const calcularImcBtn = document.getElementById('calcularImcBtn');
+    const pesoInput = document.getElementById('pesoInput');
+    const alturaInput = document.getElementById('alturaInput');
+    const resultadoImcSpan = document.getElementById('resultadoImc');
+    const clasificacionImcSpan = document.getElementById('clasificacionImc');
+
+    // Evento para abrir el modal al hacer clic en el botón "Realizar Test"
+    if (openTestModalBtn) {
+        openTestModalBtn.addEventListener('click', function() {
+            imcModal.show();
+            // Limpiar campos y resultados al abrir el modal
+            pesoInput.value = '';
+            alturaInput.value = '';
+            resultadoImcSpan.textContent = '--';
+            clasificacionImcSpan.textContent = '--';
+        });
+    }
+
+    // Evento para calcular el IMC al hacer clic en el botón dentro del modal
+    if (calcularImcBtn) {
+        calcularImcBtn.addEventListener('click', function() {
+            const peso = parseFloat(pesoInput.value);
+            const altura = parseFloat(alturaInput.value);
+
+            if (isNaN(peso) || isNaN(altura) || peso <= 0 || altura <= 0) {
+                resultadoImcSpan.textContent = 'Datos inválidos';
+                clasificacionImcSpan.textContent = '';
+                return;
+            }
+
+            const imc = peso / (altura * altura);
+            resultadoImcSpan.textContent = imc.toFixed(2); // Mostrar con 2 decimales
+
+            let clasificacion = '';
+            if (imc < 18.5) {
+                clasificacion = 'Bajo peso';
+            } else if (imc >= 18.5 && imc < 24.9) {
+                clasificacion = 'Peso normal';
+            } else if (imc >= 25 && imc < 29.9) {
+                clasificacion = 'Sobrepeso';
+            } else if (imc >= 30 && imc < 34.9) {
+                clasificacion = 'Obesidad Grado I';
+            } else if (imc >= 35 && imc < 39.9) {
+                clasificacion = 'Obesidad Grado II';
+            } else {
+                clasificacion = 'Obesidad Grado III (Mórbida)';
+            }
+            clasificacionImcSpan.textContent = clasificacion;
+        });
+    }
+});
+    </script>
+</body>
+
+</html>

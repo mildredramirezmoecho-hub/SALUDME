@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comidas Saludable</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/biografiapro.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <style>
+    
+
+      body {
+    background-color: #f4e2dc;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-setif;
+    background-color: var(--blanco);
+    color: var(--blanco);
+}
+.main-content {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+
+.container-editar {
+    max-width: 800px;
+    margin: 150px auto 60px auto; /* más espacio arriba y abajo */
+    padding: 40px 30px;
+    background-color: var(--gris-claro);
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--verde-oscuro);
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--verde);
+            display: inline-block;
+            padding-bottom: 10px;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 1px 1px 2px var(--sombra);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--negro);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gris-medio);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--negro);
+            background-color: var(--blanco);
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group select:focus {
+            border-color: var(--verde);
+            box-shadow: 0 0 0 0.2rem rgba(86, 148, 109, 0.25);
+            outline: none;
+        }
+
+        .btn-submit {
+            display: inline-block;
+            background-color: var(--verde);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--verde-oscuro);
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+        }
+
+        .alert-info {
+            color: #0c5460;
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+
+        .btn{
+    background-color: var(--blanco);
+    color: var(--verde);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+    </style>
+</head>
+<body>
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('paciente.dashboard_paciente') }}">SALUDME</a> {# O podrías enviarlo a la ruta de login si es la página principal del sitio #}
+        <ul class="nav-links">
+            <li class="nav-item">
+                   <a class="nav-link " aria-current="page" href="{{ url_for('paciente.dashboard_paciente') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="{{ url_for('paciente.recetas_productos', filter='recetas') }}">Recetas</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                {# CAMBIO: Enlaza a la lista de consultas del paciente #}
+                <a class="nav-link" href="{{ url_for('paciente.solicitar_cita') }}">Consulta</a> {# Apunta a solicitar cita #}
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <a class="nav-link  active" href="{{ url_for('paciente.mi_progreso') }}">Cuenta</a>
+            </li>
+        </ul>
+            {# CAMBIO: Formulario de búsqueda transformado en botón de Cerrar Sesión #}
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST"> {# Asumiendo una ruta de logout en 'auth' Blueprint #}
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+
+    <div class="container-editar">
+        <h2 class="section-title">Editar Información del Paciente</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('paciente.editar_datos', id_paciente=paciente.id_Pacientes) }}" method="post">
+            <div class="form-group">
+                <label for="nombres">Nombres:</label>
+                <input type="text" id="nombres" name="nombres" value="{{ paciente.nombres }}" required>
+            </div>
+            <div class="form-group">
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" value="{{ paciente.apellidos }}" required>
+            </div>
+            <div class="form-group">
+                <label for="cedula">Cédula:</label>
+                <input type="text" id="cedula" name="cedula" value="{{ paciente.cedula }}" required>
+            </div>
+            <div class="form-group">
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" name="edad" value="{{ paciente.edad }}" required>
+            </div>
+            <div class="form-group">
+                <label for="peso">Peso (kg):</label>
+                <input type="number" id="peso" name="peso" value="{{ paciente.peso }}" step="0.1" required>
+            </div>
+            <div class="form-group">
+                <label for="altura">Altura (m):</label>
+                <input type="number" id="altura" name="altura" value="{{ paciente.altura }}" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="sexo">Sexo:</label>
+                <select id="sexo" name="sexo" required>
+                    <option value="Masculino" {% if paciente.sexo == 'Masculino' %}selected{% endif %}>Masculino</option>
+                    <option value="Femenino" {% if paciente.sexo == 'Femenino' %}selected{% endif %}>Femenino</option>
+                    <option value="Otro" {% if paciente.sexo == 'Otro' %}selected{% endif %}>Otro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="objetivo">Objetivo:</label>
+                <input type="text" id="objetivo" name="objetivo" value="{{ paciente.objetivo }}" required>
+            </div>
+            <div class="form-group">
+                <label for="antecedente_alergia">Alergias:</label>
+                <input type="text" id="antecedente_alergia" name="antecedente_alergia" value="{{ paciente.antecedente_alergia }}">
+            </div>
+            <button type="submit" class="btn-submit">Guardar Cambios</button>
+            <a href="{{ url_for('paciente.mi_progreso') }}" class="btn-submit" style="background-color: var(--gris-medio);">Cancelar</a>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

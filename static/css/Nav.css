@@ -1,0 +1,180 @@
+
+        :root {
+            --primary: #56946df1 ;
+            --primary-dark:  #2e7d32;
+            --light: #FFFFFF;
+            --dark: #333333;
+            --gray: #F5F5F5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            padding-top: 60px;
+        }
+        
+        .navbar {
+            background-color: var(--primary);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 17px 0;
+        }
+        
+        .nav-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .nav-link {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0 15px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link:hover {
+            color: var(--light);
+            opacity: 0.8;
+        }
+        
+        /* Flecha para menú desplegable */
+        .nav-link.dropdown-toggle::after {
+            content: "▼";
+            font-size: 0.6rem;
+            margin-left: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .nav-item:hover .nav-link.dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        .nav-separator {
+            color: var(--light);
+            opacity: 0.6;
+        }
+        
+        .nav-title {
+            color: var(--light);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 30px;
+            text-transform: uppercase;
+        }
+        
+        /* Estilos para el menú desplegable */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--light);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            display: none;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .nav-item:hover .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            color: var(--dark);
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--gray);
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 0;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+            }
+            
+            .nav-title {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-item {
+                margin: 5px 0;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .nav-separator {
+                display: none;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                display: none;
+                width: 100%;
+                box-shadow: none;
+            }
+            
+            .nav-link.dropdown-toggle::after {
+                content: "►";
+            }
+            
+            .nav-item:hover .dropdown-menu {
+                display: none;
+            }
+            
+            .nav-item.active .dropdown-menu {
+                display: block;
+            }
+            
+            .nav-item.active .nav-link.dropdown-toggle::after {
+                content: "▼";
+            }
+        }
+  

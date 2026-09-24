@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comidas Saludable</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/progreso.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <style>
+
+
+      body {
+    background-color: #f4e2dc;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-setif;
+    background-color: var(--blanco);
+    color: var(--blanco);
+}
+    
+    .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+        .btn{
+    background-color: var(--blanco);
+    color: var(--verde);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+p{
+    color: var(--negro)!important;
+}
+
+h4{
+   color: var(--negro)!important;
+}
+
+/* Botón base */
+.btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 12px;
+    padding: 8px 20px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 12px var(--sombra);
+    border: none;
+}
+
+/* Botón Editar Cita */
+.btn-info.btn-sm {
+    background-color: var(--verde);
+    color: var(--blanco);
+}
+.btn-info.btn-sm:hover {
+    background-color: var(--verde-oscuro);
+}
+
+/* Botón Eliminar */
+.btn-danger.btn-sm {
+    background-color: #dc3545;
+    color: var(--blanco);
+}
+.btn-danger.btn-sm:hover {
+    background-color: #c82333;
+}
+
+/* Botón Aceptar */
+.btn-success.btn-sm {
+    background-color: var(--verde-oscuro);
+    color: var(--blanco);
+}
+.btn-success.btn-sm:hover {
+    background-color: #256629;
+}
+
+/* Botón Rechazar */
+.btn-warning.btn-sm {
+    background-color: #ffc107;
+    color: var(--negro);
+}
+.btn-warning.btn-sm:hover {
+    background-color: #e0a800;
+}
+
+/* Botón Cerrar (modal) */
+.modal-footer .btn-secondary {
+    background-color: var(--gris-medio);
+    color: var(--blanco);
+}
+.modal-footer .btn-secondary:hover {
+    background-color: #6c757d;
+}
+
+/* Botón Guardar Cambios */
+.modal-footer .btn-primary {
+    background-color: var(--verde);
+    color: var(--blanco);
+}
+.modal-footer .btn-primary:hover {
+    background-color: var(--verde-oscuro);
+}
+
+/* Botón Editar Perfil */
+a.btn-primary.mt-3 {
+    background-color: var(--verde);
+    color: var(--blanco);
+}
+a.btn-primary.mt-3:hover {
+    background-color: var(--verde-oscuro);
+}
+
+
+</style>
+
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('paciente.dashboard_paciente') }}">SALUDME</a> {# O podrías enviarlo a la ruta de login si es la página principal del sitio #}
+        <ul class="nav-links">
+            <li class="nav-item">
+                   <a class="nav-link " aria-current="page" href="{{ url_for('paciente.dashboard_paciente') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('paciente.recetas_productos', filter='recetas') }}">Recetas</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                {# CAMBIO: Enlaza a la lista de consultas del paciente #}
+                <a class="nav-link" href="{{ url_for('paciente.solicitar_cita') }}">Consulta</a> {# Apunta a solicitar cita #}
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <a class="nav-link  active" href="{{ url_for('paciente.mi_progreso') }}">Cuenta</a>
+            </li>
+        </ul>
+            {# CAMBIO: Formulario de búsqueda transformado en botón de Cerrar Sesión #}
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST"> {# Asumiendo una ruta de logout en 'auth' Blueprint #}
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+<div class="main-content">
+    <div class="profile-header">
+        <div class="profile-picture-container">
+            <img id="imagenPerfil" class="profile-picture" src="{{ url_for('static', filename=paciente.foto) if paciente.foto else url_for('static', filename='perfil_default.jpg') }}" alt="Foto de Perfil">
+            <i class="fas fa-edit edit-icon" onclick="mostraOpciones()"></i>
+        </div>
+        <h1 class="profile-name">{{ paciente.nombres }} {{ paciente.apellidos }}</h1>
+        <p class="profile-email">{{ paciente.usuario.email }}</p>
+        <a href="{{ url_for('paciente.editar_datos', id_paciente=paciente.id_Pacientes) }}" class="btn btn-primary mt-3">Editar Perfil</a>
+    </div>
+
+    <div class="profile-info-grid">
+        <div class="info-card">
+            <h4>Información Personal</h4>
+            <p><strong>Edad:</strong> {{ paciente.edad }} años</p>
+            <p><strong>Sexo:</strong> {{ paciente.sexo }}</p>
+            <p><strong>Cédula:</strong> {{ paciente.cedula }}</p>
+            <p><strong>Teléfono:</strong> {{ paciente.telefono if paciente.telefono else 'N/A' }}</p>
+        </div>
+        <div class="info-card">
+            <h4>Datos de Salud</h4>
+            <p><strong>Peso:</strong> {{ paciente.peso if paciente.peso is not none else 'N/A' }} kg</p>
+            <p><strong>Altura:</strong> {{ paciente.altura if paciente.altura is not none else 'N/A' }} m</p>
+            <p><strong>Objetivo:</strong> {{ paciente.objetivo if paciente.objetivo else 'No especificado' }}</p>
+            <p><strong>Nivel de Actividad:</strong> {{ paciente.nivel_actividad if paciente.nivel_actividad else 'No especificado' }}</p>
+            <p><strong>Alergias:</strong> {{ paciente.antecedente_alergia if paciente.antecedente_alergia else 'Ninguna' }}</p>
+        </div>
+    </div>
+
+ <h2 class="section-title">Historial de Progreso</h2>
+<div class="data-grid">
+    {% if progresos %}
+        {% for progreso in progresos %}
+        <div class="data-card">
+            <h4>Registro del {{ progreso.fecha.strftime('%d/%m/%Y') }}</h4>
+            <p><strong>Peso:</strong> {{ progreso.peso_actual }} kg</p>
+            <p><strong>Altura:</strong> {{ paciente.altura if paciente.altura is not none else 'N/A' }} m</p>
+            <p><strong>Cintura:</strong> {{ progreso.circunferencia_cintura if progreso.circunferencia_cintura is not none else 'N/A' }} cm</p>
+            <p><strong>IMC:</strong> {{ progreso.imc if progreso.imc is not none else 'N/A' }}</p>
+            <p><strong>Comentarios:</strong> {{ progreso.comentarios if progreso.comentarios else 'Sin comentarios' }}</p>
+            <p><strong>Recomendaciones:</strong> {{ progreso.recomendaciones if progreso.recomendaciones else 'Sin recomendaciones' }}</p>
+            <form action="{{ url_for('paciente.eliminar_mi_progreso', progreso_id=progreso.id) }}" method="POST"  onsubmit="return confirm('¿Estás seguro de que quieres eliminar este registro de progreso? Esta acción es irreversible.');">
+                <button type="submit" class="btn btn-sm btn-danger" >Eliminar Registro</button>
+            </form>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-data-message">No hay registros de progreso aún.</p>
+    {% endif %}
+</div>
+
+<h2 class="section-title">Citas Agendadas</h2>
+<div class="data-grid">
+    {% if consultas %}
+        {% for consulta in consultas %}
+        <div class="data-card">
+            <h4>Cita con {{ consulta.profesional.nombre }} {{ consulta.profesional.apellido_P }}</h4>
+            <p><strong>Fecha:</strong> {{ consulta.fecha.strftime('%d/%m/%Y') }}</p>
+            <p><strong>Hora:</strong> {{ consulta.hora.strftime('%H:%M') }}</p>
+            <p><strong>Estado:</strong> {{ consulta.estado }}</p>
+            <p><strong>Solicitada por:</strong>
+                {% if consulta.solicitada_por == 'profesional' %}
+                    El profesional
+                    <span class="d-block mt-2">Acción requerida:</span>
+                    <div class="d-flex gap-2 mt-2">
+                        <form method="POST" action="{{ url_for('paciente.responder_consulta', id=consulta.id_consulta) }}">
+                            <input type="hidden" name="accion" value="aceptar">
+                            <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('paciente.responder_consulta', id=consulta.id_consulta) }}">
+                            <input type="hidden" name="accion" value="rechazar">
+                            <button type="submit" class="btn btn-warning btn-sm">Rechazar</button>
+                        </form>
+                    </div>
+                {% elif consulta.solicitada_por == 'paciente' %}
+                    El paciente
+                    {% if consulta.estado == 'Pendiente' %}
+                        <button type="button" class="btn btn-info btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#editarCitaModal{{ consulta.id_consulta }}">
+                            Editar Cita
+                        </button>
+                    {% else %}
+                        <span class="d-block mt-2">Estado: {{ consulta.estado }}</span>
+                    {% endif %}
+                {% else %}
+                    Desconocido
+                {% endif %}
+            </p>
+
+            <a href="{{ url_for('paciente.eliminar_cita', id=consulta.id_consulta) }}"
+               class="btn btn-sm btn-danger"
+               onclick="return confirm('¿Estás seguro de eliminar esta cita?');">
+               Eliminar
+            </a>
+        </div>
+        
+
+        {# Modal para editar cita #}
+        <div class="modal fade" id="editarCitaModal{{ consulta.id_consulta }}" tabindex="-1" aria-labelledby="editarCitaModalLabel{{ consulta.id_consulta }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="POST" action="{{ url_for('paciente.editar_cita', id=consulta.id_consulta) }}">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editarCitaModalLabel{{ consulta.id_consulta }}">Editar Cita</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="fecha{{ consulta.id_consulta }}" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" name="fecha" id="fecha{{ consulta.id_consulta }}"
+                                       value="{{ consulta.fecha.strftime('%Y-%m-%d') }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="hora{{ consulta.id_consulta }}" class="form-label">Hora</label>
+                                <input type="time" class="form-control" name="hora" id="hora{{ consulta.id_consulta }}"
+                                       value="{{ consulta.hora.strftime('%H:%M') }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="estado{{ consulta.id_consulta }}" class="form-label">Estado</label>
+                                <select class="form-select" name="estado" id="estado{{ consulta.id_consulta }}">
+                                    <option value="Pendiente" {% if consulta.estado == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                                    <option value="Confirmada" {% if consulta.estado == 'Confirmada' %}selected{% endif %}>Confirmada</option>
+                                    <option value="Cancelada" {% if consulta.estado == 'Cancelada' %}selected{% endif %}>Cancelada</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-data-message">No hay citas agendadas para este paciente.</p>
+    {% endif %}
+</div>
+
+<div class="text-end mt-4">
+    <a href="{{ url_for('paciente.mis_consultas') }}" style="background-color: #56946df1 ; color: beige;" class="btn btn-outline-primary">
+        Ver todas las consultas
+    </a>
+</div>
+
+
+    <div id="Opcionesimagen" class="modal-content">
+        <h3>Selecciona una foto de perfil</h3>
+        <div class="image-options">
+            <img src="{{ url_for('static', filename='user1.jpg') }}" class="image-option" onclick="Cambiarfoto('user1.jpg')">
+            <img src="{{ url_for('static', filename='user2.jpg') }}" class="image-option" onclick="Cambiarfoto('user2.jpg')">
+            <img src="{{ url_for('static', filename='user3.jpg') }}" class="image-option" onclick="Cambiarfoto('user3.jpg')">
+            <img src="{{ url_for('static', filename='user4.jpg') }}" class="image-option" onclick="Cambiarfoto('user4.jpg')">
+        </div>
+<form id="formFoto" action="{{ url_for('paciente.guardar_foto') }}" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="foto_perfil">Subir Foto de Perfil:</label>
+    
+    </div>
+</form>
+        <button class="btn-cerrar-opciones" onclick="document.getElementById('Opcionesimagen').style.display = 'none'; document.querySelector('.modal-backdrop-custom').style.display = 'none';">Cerrar</button>
+    </div>
+    <div class="modal-backdrop-custom" onclick="document.getElementById('Opcionesimagen').style.display = 'none'; this.style.display = 'none';"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function mostraOpciones() {
+            document.getElementById('Opcionesimagen').style.display = 'flex';
+            document.querySelector('.modal-backdrop-custom').style.display = 'block';
+        }
+
+        async function Cambiarfoto(nombrefoto) {
+            document.getElementById('imagenPerfil').src = `/static/${nombrefoto}`;
+            document.getElementById('fotoSeleccionadaInput').value = nombrefoto;
+
+            const form = document.getElementById('formFoto');
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.status === 'success') {
+                    // Si la actualización fue exitosa, recargar la página para reflejar el cambio
+                    // y asegurar que el modal se cierre correctamente.
+                    window.location.reload(); 
+                } else {
+                    // Mostrar un mensaje de error si la actualización falló
+                    alert(result.message || 'Error al actualizar la foto de perfil.');
+                }
+            } catch (error) {
+                console.error('Error al enviar la solicitud:', error);
+                alert('Ocurrió un error de red o del servidor al actualizar la foto.');
+            }
+            // No ocultar el modal aquí, se cerrará con la recarga de la página o con el botón de cerrar
+        }
+    </script>
+</body>
+</html>
+
+

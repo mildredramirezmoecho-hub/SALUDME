@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agenda | SaludMe</title>
+
+  <!-- Estilos externos -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+        body {
+            background-color: #f1f1f1;;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
+
+    .agenda-container {
+      margin: 8rem auto 2rem auto;
+      padding: 2rem;
+      width: 90%;
+      max-width: 1200px;
+      background-color: var(--blanco);
+      border-radius: 1.5em;
+      box-shadow: 0 6px 30px var(--sombra);
+    }
+
+    .agenda-title {
+      color: var(--verde-oscuro);
+          font-family: 'Nunito', sans-serif;
+
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 800; /* Un poco más de grosor para mayor impacto */
+      font-size: 2.5rem; /* Tamaño de fuente más grande */
+    }
+
+    .week-navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .agenda-grid {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    .agenda-grid th, .agenda-grid td {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+    }
+
+    .modal .modal-content {
+      border-radius: 1rem;
+    }
+
+    .modal-header {
+      background-color: var(--verde);
+      color: white;
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('profesional.dashboard_profesional') }}">SALUDME</a>        <ul class="nav-links">
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.dashboard_profesional' %}active{% endif %}" aria-current="page" href="{{ url_for('profesional.dashboard_profesional') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.gestion_pacientes' %}active{% endif %}" href="{{ url_for('profesional.gestion_pacientes') }}">Gestión De Pacientes</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.agenda' %}active{% endif %}" href="{{ url_for('profesional.agenda') }}">Agenda</a>
+                    <i class="fa-solid fa-calendar-days"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'profesional.gestion_recetas' %}active{% endif %}" href="{{ url_for('profesional.gestion_recetas') }}">Recetas</a>
+                <i class="fa-solid fa-book-open"></i>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.cuenta' %}active{% endif %}" href="{{ url_for('profesional.cuenta') }}">Cuenta</a>
+                    <i class="fa-solid fa-user-tie"></i>
+                </a>
+            </li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+
+ <div class="agenda-container">
+    <h1 class="agenda-title">Agenda del Consultorio</h1>
+
+    <div class="week-navigation">
+      <button class="btn btn-outline-secondary" id="prev-week">← Semana anterior</button>
+      <span class="fw-semibold" id="week-range"></span> {# Se llenará con JS #}
+      <button class="btn btn-outline-secondary" id="next-week">Siguiente semana →</button>
+    </div>
+<table class="agenda-grid" id="agenda-grid">
+    <thead>
+        <tr>
+            <th>Hora</th>
+            <th>Lun <span class="date" data-day-index="0"></span></th>
+            <th>Mar <span class="date" data-day-index="1"></span></th>
+            <th>Mié <span class="date" data-day-index="2"></span></th>
+            <th>Jue <span class="date" data-day-index="3"></span></th>
+            <th>Vie <span class="date" data-day-index="4"></span></th>
+            <th>Sáb <span class="date" data-day-index="5"></span></th>
+        </tr>
+    </thead>
+    <tbody id="agenda-body">
+        </tbody>
+</table>
+
+
+  <div id="appointment-modal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nueva Cita</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="appointment-form" method="POST" action="{{ url_for('profesional.agendar_consulta') }}"> 
+          <input type="hidden" name="appointment_id" id="appointment-id">
+          <input type="hidden" name="appointment_date" id="appointment-date">
+          <input type="hidden" name="appointment_time" id="appointment-time">
+
+          <div class="mb-3">
+              <label for="patient-identifier" class="form-label">Cédula del Paciente</label>
+              <input type="text" class="form-control" id="patient-identifier" name="patient_identifier" required placeholder="Ingrese la cédula del paciente">
+              <small id="patient-name-display" class="form-text text-muted"></small>
+          </div>
+
+          <div class="mb-3">
+            <label for="appointment-type" class="form-label">Tipo de Consulta</label>
+            <select class="form-select" id="appointment-type" name="appointment_type" required>
+              <option value="">Seleccionar...</option>
+              <option value="Pendiente">Consulta General</option> {# Cambiado a Pendiente por defecto #}
+              <option value="Control">Control</option>
+              <option value="Seguimiento">Seguimiento</option>
+              <option value="Emergencia">Emergencia</option>
+            </select>
+          </div>
+
+          <div class="form-actions d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-success">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const weekRange = document.getElementById('week-range');
+    const prevWeekBtn = document.getElementById('prev-week');
+    const nextWeekBtn = document.getElementById('next-week');
+    const dayHeaders = document.querySelectorAll('#agenda-grid thead th .date');
+    const tbody = document.getElementById('agenda-body');
+    const patientIdentifierInput = document.getElementById('patient-identifier');
+    const patientNameDisplay = document.getElementById('patient-name-display');
+    const appointmentForm = document.getElementById('appointment-form');
+
+    let currentMonday = getMonday(new Date());
+
+    function getMonday(d) {
+      d = new Date(d);
+      const day = d.getDay();
+      const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+      return new Date(d.setDate(diff));
+    }
+
+    function formatDay(date) {
+      return `${date.getDate()}/${date.getMonth() + 1}`;
+    }
+
+    function formatWeekRange(startDate) {
+      const endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 6);
+      const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+                      "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+      return `${startDate.getDate()} – ${endDate.getDate()} ${months[startDate.getMonth()]} ${startDate.getFullYear()}`;
+    }
+
+    function updateHeaders() {
+      dayHeaders.forEach((span, i) => {
+        const date = new Date(currentMonday);
+        date.setDate(date.getDate() + i);
+        span.textContent = formatDay(date);
+      });
+      weekRange.textContent = formatWeekRange(currentMonday);
+    }
+
+    function generateRows() {
+      tbody.innerHTML = '';
+      for (let hour = 7; hour <= 23; hour++) {
+        const row = document.createElement('tr');
+        const horaCell = document.createElement('td');
+
+        const internalHour = hour.toString().padStart(2, '0') + ':00';
+        let displayHour = hour > 12 ? (hour - 12) + ':00 PM' : hour + ':00 AM';
+        if (hour === 12) displayHour = '12:00 PM';
+        if (hour === 24) displayHour = '12:00 AM';
+
+        horaCell.textContent = displayHour;
+        horaCell.style.fontWeight = 'bold';
+        horaCell.dataset.time = internalHour;
+        row.appendChild(horaCell);
+
+        for (let i = 0; i < 6; i++) {
+          const cell = document.createElement('td');
+          const cellDate = new Date(currentMonday);
+          cellDate.setDate(currentMonday.getDate() + i);
+          cell.dataset.date = cellDate.toISOString().split('T')[0];
+          cell.dataset.time = internalHour;
+          row.appendChild(cell);
+        }
+
+        tbody.appendChild(row);
+      }
+    }
+
+    function assignCellClick() {
+      document.querySelectorAll('#agenda-grid tbody td:not(:first-child)').forEach(cell => {
+        cell.addEventListener('click', () => {
+          const row = cell.parentElement;
+          const time24h = row.querySelector('td:first-child').dataset.time;
+          const fullDate = cell.dataset.date;
+
+          document.getElementById('appointment-time').value = time24h;
+          document.getElementById('appointment-date').value = fullDate;
+          document.getElementById('patient-identifier').value = '';
+          patientNameDisplay.textContent = '';
+
+          const modal = new bootstrap.Modal(document.getElementById('appointment-modal'));
+          modal.show();
+        });
+      });
+    }
+
+    async function fetchAndRenderAppointments() {
+      // Eliminar citas existentes antes de renderizar nuevas
+      document.querySelectorAll('.appointment-card').forEach(card => card.remove());
+
+      const startDate = currentMonday.toISOString().split('T')[0];
+      const endDate = new Date(currentMonday);
+      endDate.setDate(endDate.getDate() + 6);
+      const endDateStr = endDate.toISOString().split('T')[0];
+
+      try {
+        const response = await fetch(`/profesional/api/citas_profesional?start_date=${startDate}&end_date=${endDateStr}`);
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+          console.error(`Error al cargar citas: ${errorData.error || 'Problema de conexión con el servidor.'}`);
+          return;
+        }
+
+        const appointments = await response.json();
+
+        appointments.forEach(appointment => {
+          const appDateStr = appointment.fecha;
+          const appHour = appointment.hora;
+
+          const targetCell = document.querySelector(
+            `#agenda-grid tbody td[data-date="${appDateStr}"][data-time="${appHour}"]`
+          );
+
+          if (targetCell) {
+            const appointmentCard = document.createElement('div');
+            appointmentCard.className = 'appointment-card';
+const quienCreo = appointment.solicitada_por === 'profesional' ? '🩺 Profesional' : '🧑 Paciente';
+
+appointmentCard.innerHTML = `
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <strong>${appointment.paciente_nombre}</strong><br>
+      <span>${appointment.estado} - ${appointment.hora}</span><br>
+      <small>Creado por: ${quienCreo}</small>
+    </div>
+    <button class="btn btn-sm btn-danger ms-2 delete-appointment" data-id="${appointment.id}">&times;</button>
+  </div>
+`;
+            targetCell.appendChild(appointmentCard);
+          } else {
+            console.warn(`No se encontró celda para la cita: Fecha ${appDateStr}, Hora ${appHour}`);
+          }
+        });
+
+        // Asignar eventos de eliminación
+        document.querySelectorAll('.delete-appointment').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.stopPropagation(); // No abrir modal
+            const id = btn.dataset.id;
+            if (confirm('¿Estás seguro de que deseas eliminar esta cita?')) {
+              try {
+                const res = await fetch(`/profesional/api/eliminar_cita/${id}`, {
+                  method: 'DELETE'
+                });
+                if (res.ok) {
+                  await fetchAndRenderAppointments();
+                } else {
+                  alert('Error al eliminar la cita.');
+                }
+              } catch (error) {
+                console.error('Error al eliminar la cita:', error);
+                alert('Error de conexión.');
+              }
+            }
+          });
+        });
+
+      } catch (error) {
+        console.error('Error al cargar las citas:', error);
+      }
+    }
+
+    prevWeekBtn.addEventListener('click', () => {
+      currentMonday.setDate(currentMonday.getDate() - 7);
+      updateHeaders();
+      generateRows();
+      assignCellClick();
+      fetchAndRenderAppointments();
+    });
+
+    nextWeekBtn.addEventListener('click', () => {
+      currentMonday.setDate(currentMonday.getDate() + 7);
+      updateHeaders();
+      generateRows();
+      assignCellClick();
+      fetchAndRenderAppointments();
+    });
+
+    appointmentForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const formData = new FormData(appointmentForm);
+      try {
+        const response = await fetch(appointmentForm.action, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          const modal = bootstrap.Modal.getInstance(document.getElementById('appointment-modal'));
+          modal.hide();
+          await fetchAndRenderAppointments();
+        } else {
+          const errorText = await response.text();
+          console.error('Error al guardar la cita:', errorText);
+          alert('Hubo un error al guardar la cita. Por favor, revisa la consola para más detalles.');
+        }
+      } catch (error) {
+        console.error('Error al enviar el formulario:', error);
+        alert('Error de conexión al intentar guardar la cita.');
+      }
+    });
+
+    if (patientIdentifierInput) {
+      patientIdentifierInput.addEventListener('input', debounce(async (e) => {
+        const cedula = e.target.value.trim();
+        if (cedula.length >= 3) {
+          try {
+            const response = await fetch(`/profesional/api/buscar_paciente_por_cedula/${cedula}`);
+            if (response.ok) {
+              const data = await response.json();
+              if (data.nombres && data.apellidos) {
+                patientNameDisplay.textContent = `Paciente: ${data.nombres} ${data.apellidos}`;
+                patientNameDisplay.style.color = 'green';
+              } else {
+                patientNameDisplay.textContent = 'Paciente no encontrado.';
+                patientNameDisplay.style.color = 'red';
+              }
+            } else {
+              patientNameDisplay.textContent = 'Error al buscar paciente.';
+              patientNameDisplay.style.color = 'red';
+            }
+          } catch (error) {
+            console.error('Error al buscar paciente:', error);
+            patientNameDisplay.textContent = 'Error de conexión.';
+            patientNameDisplay.style.color = 'red';
+          }
+        } else {
+          patientNameDisplay.textContent = '';
+        }
+      }, 500));
+    }
+
+    function debounce(func, delay) {
+      let timeout;
+      return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+      };
+    }
+
+    updateHeaders();
+    generateRows();
+    assignCellClick();
+    fetchAndRenderAppointments();
+  });
+</script>
+
+
+
+</body>
+</html>

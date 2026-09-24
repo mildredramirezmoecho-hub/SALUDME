@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de la Receta: {{ receta.nombre }} - SaludMe</title>
+
+    <!-- CSS locales y externos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/recetas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --verde-oscuro: #2e7d32;
+            --verde: #56946df1;
+            --verde-claro: #c8e6c9;
+            --blanco: #ffffff;
+            --gris-claro: #e5e5e5;
+            --gris-medio: #888888;
+            --sombra: rgba(0, 0, 0, 0.05);
+            --negro: #212121;
+            --import: #f5f4f4;
+            --text-color: #333;
+            --white-color: #fff;
+            --secondary-color: #f4e2dc; /* Color de fondo general */
+        }
+
+        body {
+            background-color: var(--blanco); /* Fondo principal a blanco */
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 100px; /* Espacio para el navbar fijo */
+        }
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 1.15rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #f0f0f0;
+            font-weight: 700;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: #f0f0f0;
+        }
+
+        .nav-links a.active {
+            color: #212121;
+            font-weight: 900;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item i {
+            margin-right: 0.5rem;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" style="color: var(--blanco); font-size: 1.5rem;" href="{{ url_for('paciente.dashboard_paciente') }}">SALUDME</a>
+            <ul class="nav-links d-flex list-unstyled gap-3 mb-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('paciente.dashboard_paciente') }}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-bars-progress"></i>
+                    <a class="nav-link active" href="{{ url_for('paciente.recetas_productos', filter='recetas') }}">Recetas</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-user"></i>
+                    <a class="nav-link" href="{{ url_for('paciente.solicitar_cita') }}">Consulta</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-user"></i>
+                    <a class="nav-link" href="{{ url_for('paciente.mi_progreso') }}">Cuenta</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    {% set ingredientes_lista = (receta.ingredientes or '').replace('\n', ',').split(',') %}
+    {% set cant_ing = receta.cant_ingredientes if receta.cant_ingredientes else ingredientes_lista|select|list|length %}
+
+    <main class="receta-detalle">
+        {# --- Cabecera: foto + datos generales de la receta --- #}
+        <div class="receta-detalle-header">
+            <div class="receta-detalle-foto">
+                <img src="{{ url_for('static', filename=receta.foto) if receta.foto else url_for('static', filename='img/recipes/default_recipe.png') }}" alt="{{ receta.nombre }}">
+                {% if receta.categoria %}
+                    <span class="recipe-badge">{{ receta.categoria }}</span>
+                {% endif %}
+            </div>
+
+            <div class="receta-detalle-info">
+                <h1>{{ receta.nombre }}</h1>
+
+                <ul class="recipe-meta">
+                    <li><i class="fa-solid fa-basket-shopping"></i> {{ cant_ing }} ingrediente{{ 's' if cant_ing != 1 else '' }}</li>
+                    {% if receta.categoria %}
+                        <li><i class="fa-solid fa-tag"></i> {{ receta.categoria }}</li>
+                    {% endif %}
+                </ul>
+
+                <p class="receta-resumen">{{ receta.descripcion if receta.descripcion else 'Sin descripción disponible.' }}</p>
+            </div>
+        </div>
+
+        {# --- Ingredientes --- #}
+        <section class="receta-seccion">
+            <h2><i class="fa-solid fa-leaf"></i> Ingredientes</h2>
+            {% if receta.ingredientes %}
+                <ul class="ingredientes-lista">
+                    {% for ingr in ingredientes_lista %}
+                        {% if ingr.strip() %}
+                            <li><i class="fa-solid fa-circle-check"></i> {{ ingr.strip() }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="receta-preparacion-vacio">Sin ingredientes registrados.</p>
+            {% endif %}
+        </section>
+
+        {# --- Preparación --- #}
+        <section class="receta-seccion">
+            <h2><i class="fa-solid fa-fire-burner"></i> Preparación</h2>
+            {% if receta.instrucciones %}
+                <p class="receta-preparacion">{{ receta.instrucciones }}</p>
+            {% else %}
+                <p class="receta-preparacion-vacio">Aún no hay pasos de preparación para esta receta.</p>
+            {% endif %}
+        </section>
+
+        {# --- Volver al listado (parámetro 'filter' correcto) --- #}
+        <a href="{{ url_for('paciente.recetas_productos', filter='recetas') }}" class="receta-volver">
+            <i class="fa-solid fa-arrow-left"></i> Volver a Recetas
+        </a>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

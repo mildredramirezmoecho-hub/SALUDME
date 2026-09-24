@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas y Productos - SaludMe</title>
+
+    <!-- CSS locales correctamente enlazados -->
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tarjetas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fondomenu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+
+    <!-- Fuentes y librerías externas -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <style>
+    
+
+      body {
+    background-color: #f4e2dc;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-setif;
+    background-color: var(--blanco);
+    color: var(--blanco);
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+        
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;}
+
+        .recipe-detail-container {
+            max-width: 900px;
+            margin: 120px auto 60px auto;
+            padding: 30px;
+            background-color: var(--gris-claro);
+            color: var(--white-color);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .recipe-image-section {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+
+        .recipe-image-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .recipe-info-section {
+            flex: 2;
+            min-width: 350px;
+        }
+
+      .recipe-info-section h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--negro); /* Color del título para contraste */
+            margin-bottom: 20px;
+        }
+
+        .recipe-info-section p {
+            font-size: 1.1rem;
+            color: var(--negro); /* Color del texto para contraste */
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .recipe-info-section strong {
+            color: var(--negro); /* Color de strong para contraste */
+        }
+
+
+        .btn-back {
+            display: inline-block;
+            background-color: var(--verde-oscuro);
+            color: var(--blanco);
+            padding: 12px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .btn-back:hover {
+            background-color: #256a29;
+        }
+
+        @media (max-width: 768px) {
+            .recipe-detail-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .recipe-image-section, .recipe-info-section {
+                width: 100%;
+            }
+
+            .recipe-info-section h1 {
+                font-size: 2.2rem;
+                text-align: center;
+            }
+
+            .btn-back {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" style="color: var(--blanco); font-size: 1.5rem;" href="{{ url_for('paciente.dashboard_paciente') }}">SALUDME</a>
+            <ul class="nav-links d-flex list-unstyled gap-3 mb-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('paciente.dashboard_paciente') }}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-bars-progress"></i>
+                    <a class="nav-link active" href="{{ url_for('paciente.recetas_productos', filter_by='receta') }}">Recetas</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-user"></i>
+                    <a class="nav-link" href="{{ url_for('paciente.mis_consultas') }}">Consulta</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-user"></i>
+                    <a class="nav-link" href="{{ url_for('paciente.mi_progreso') }}">Cuenta</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+    <div class="recipe-detail-container">
+        <div class="recipe-image-section">
+            {# Asume que tienes una imagen por defecto si la receta no tiene una foto específica #}
+            <img src="{{ url_for('static', filename=producto.foto) if producto.foto else url_for('static', filename='img/products/default_product.png') }}" alt="{{ producto.nombre }}">
+        </div>
+        <div class="recipe-info-section">
+       <h1>{{ producto.nombre }}</h1>
+        <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+        {# Asume que tu modelo Producto tiene un campo 'precio' #}
+        <p><strong>Precio:</strong> ${{ "%.2f"|format(producto.precio) }}</p>
+        {# Puedes añadir más detalles del producto aquí si tu modelo Producto los tiene #}
+        {# Por ejemplo: <p><strong>Stock disponible:</strong> {{ producto.stock }}</p> #}
+        {# <p><strong>Categoría:</strong> {{ producto.categoria }}</p> #}
+        
+        {# Este enlace te devuelve a la vista combinada de productos y recetas, filtrada por 'producto' #}
+<a href="{{ url_for('paciente.recetas_productos', filter_by='producto') }}" class="btn-back">Volver a Producto</a>   
+
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

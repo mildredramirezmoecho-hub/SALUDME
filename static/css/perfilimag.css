@@ -1,0 +1,144 @@
+.cuenta {
+    width: 95%;
+    height: 600px;
+    max-width: 1000px;
+    margin: 100px auto 40px auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.contenido-cuenta {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.imagen-before {
+    width: 160px;
+    position: relative;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.imagen-before img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ccc;
+}
+
+.editaricon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: white;
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+.editaricon i {
+    font-size: 16px;
+    color: #905912;
+}
+
+.imagen-seleccionada {
+    display: none;
+    gap: 15px;
+    margin-top: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.imagen-seleccionada.visible {
+    display: flex;
+}
+
+.imagen-seleccionada img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: 0.3s;
+}
+
+.imagen-seleccionada img:hover {
+    transform: scale(1.05);
+    border-color: #905912;
+}
+
+.submit {
+    display: block;
+    margin: 20px auto 0 auto;
+    padding: 10px 25px;
+    background-color: #905912;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit:hover {
+    background-color: #754511;
+}
+
+.datos {
+    flex: 1;
+    min-width: 300px;
+}
+
+.paciente-datos {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    gap: 15px 30px;
+}
+
+.paciente-datos h3 {
+    grid-column: span 2;
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    color: #333;
+    border-bottom: 2px solid #f0d5c0;
+    padding-bottom: 5px;
+}
+
+.paciente-datos p {
+    margin: 0;
+    font-size: 1rem;
+    color: #444;
+}
+
+.paciente-datos strong {
+    color: #b35c3b;
+}
+
+.btn-editar {
+    grid-column: span 2;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #5cb85c;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.btn-editar:hover {
+    background-color: #4cae4c;
+}

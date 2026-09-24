@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Personal - SaludMe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde-oscuro: #2e7d32;
+            --verde: #56946df1;
+            --verde-claro: #c8e6c9;
+            --blanco: #ffffff;
+            --gris-claro: #f1f1f1;
+            --gris-medio: #888888;
+            --sombra: rgba(0, 0, 0, 0.05);
+            --negro: #212121;
+            --import: #f5f4f4;
+            --text-color: #333;
+            --white-color: #fff;
+            --secondary-color: #f4e2dc;
+        }
+
+        body {
+            background-color: var(--gris-claro);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 100px; /* Espacio para el navbar fijo */
+        }
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 1.15rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #f0f0f0;
+            font-weight: 700;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: #f0f0f0;
+        }
+
+        .nav-links a.active {
+            color: #212121;
+            font-weight: 900;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item i {
+            margin-right: 0.5rem;
+            text-decoration: none;
+        }
+
+        .main-content {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto 20px auto;
+            padding: 30px;
+            background-color: var(--blanco);
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--verde-oscuro);
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .dashboard-card {
+            background-color: var(--import);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .dashboard-card i {
+            font-size: 3.5rem;
+            color: var(--verde);
+            margin-bottom: 20px;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--negro);
+            margin-bottom: 10px;
+        }
+
+        .dashboard-card p {
+            font-size: 1rem;
+            color: var(--gris-medio);
+        }
+
+        .btn-logout {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-logout:hover {
+            background-color: #c82333;
+            border-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('personal.dashboard_personal') }}">SALUDME</a>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('personal.dashboard_personal') }}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-utensils"></i>
+                    <a class="nav-link" href="{{ url_for('personal.gestion_recetas') }}">Recetas</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-box"></i>
+                    <a class="nav-link" href="{{ url_for('personal.gestion_productos') }}">Productos</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-users"></i>
+                    <a class="nav-link" href="{{ url_for('personal.gestion_usuarios') }}">Usuarios</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+                <button class="btn btn-outline-success btn-logout" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1>Bienvenido, Personal de SaludMe</h1>
+        <p>Desde aquí puedes gestionar los diferentes aspectos de la plataforma.</p>
+
+        <div class="card-container">
+            <a href="{{ url_for('personal.gestion_recetas') }}" class="dashboard-card">
+                <i class="fa-solid fa-book-open"></i>
+                <h3>Gestionar Recetas</h3>
+                <p>Añade, edita o elimina recetas saludables.</p>
+            </a>
+            <a href="{{ url_for('personal.gestion_productos') }}" class="dashboard-card">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <h3>Gestionar Productos</h3>
+                <p>Administra la lista de productos disponibles.</p>
+            </a>
+            <a href="{{ url_for('personal.gestion_usuarios') }}" class="dashboard-card">
+                <i class="fa-solid fa-user-gear"></i>
+                <h3>Gestionar Usuarios</h3>
+                <p>Controla los usuarios de la plataforma (pacientes, profesionales, etc.).</p>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

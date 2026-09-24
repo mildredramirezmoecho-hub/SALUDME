@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Recetas y Comidas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--verde-claro);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la ventana */
+            overflow: hidden; /* Evita scroll si la imagen de fondo es muy grande */
+        }
+
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .login-form-container {
+            position: relative;
+            background-color: var(--import);
+            padding: 50px 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px var(--sombra);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+
+        .login-form-container h1 {
+            color: var(--verde);
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        .form-floating > .form-control {
+            border-radius: 10px;
+            padding-left: 30px;
+        }
+
+        .form-floating > label {
+            padding-left: 20px;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--verde);
+            font-size: 1.2em;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .dropdown .btn {
+            background-color: var(--blanco);
+            color: rgb(46, 46, 46);
+            font-weight: 550;
+            border-color: var(--blanco);
+            border-width: 3.5px;
+            border-radius: 20px;
+            min-width: 90px;
+        }
+
+        .btn:hover {
+            border-color: var(--blanco);
+            background-color: var(--blanco);
+            color: rgb(46, 46, 46);
+        }
+
+        .dropdown ul {
+            background-color: var(--blanco);
+            color: var(--blanco);
+            border-color: var(--blanco);
+            border-width: 3.5px;
+            border-radius: 20px;
+            min-width: 90px;
+            padding: 0.5rem 0;
+        }
+        .dropdown ul li a {
+            color: rgb(46, 46, 46);
+            padding: 0.5rem 1rem;
+        }
+        .dropdown ul li a:hover {
+            border-radius: 10px;
+            background-color: var(--verde-claro);
+            color: rgb(46, 46, 46);
+        }
+
+        .btn-custom {
+            text-decoration: none;
+            background-color: var(--verde);
+            color: var(--blanco);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            border: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-custom:hover {
+            background-color: var(--blanco);
+            color: var(--negro);
+            box-shadow: 0 4px 15px var(--sombra);
+            transform: translateY(-2px);
+            border: 1px solid var(--verde);
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+        .invalid-feedback {
+            color: #dc3545;
+            font-size: 0.9em;
+            text-align: left;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .login-form-container {
+                padding: 40px 30px;
+                max-width: 600px;
+            }
+        }
+        @media (max-width: 992px) {
+            .login-form-container {
+                padding: 40px 30px;
+                max-width: 450px;
+            }
+            .login-form-container h1 {
+                font-size: 2em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+                align-items: flex-start;
+                overflow-y: auto;
+            }
+            .login-form-container {
+                margin: 50px auto;
+                width: 95%;
+                max-width: 400px;
+            }
+            .login-form-container h1 {
+                font-size: 1.8em;
+                margin-bottom: 30px;
+            }
+            .form-floating > .form-control,
+            .form-floating > label {
+                padding-left: 45px;
+            }
+            .form-floating .input-icon {
+                right: 20px; /* Ajuste para móviles */
+                left: unset; /* Deshacer left si se usó */
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .login-form-container {
+                padding: 30px 20px;
+                margin: 30px auto;
+            }
+            .btn-custom {
+                padding: 10px 25px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="background-container"></div>
+<div class="login-form-container">
+    <h1 class="text-center">¡Bienvenido!</h1>
+    <form action="{{ url_for('auth.login') }}" method="POST" class="needs-validation" novalidate>
+
+        <div class="form-floating mb-4 position-relative">
+            <i class="fa-solid fa-user input-icon"></i>
+            <input type="email" class="form-control" name="email" id="Email" placeholder="Tu correo electrónico" required aria-describedby="emailFeedback">
+            <label for="Email">Correo Electrónico</label>
+            <div id="emailFeedback" class="invalid-feedback">
+                Por favor, ingresa un correo electrónico válido.
+            </div>
+        </div>
+
+        <div class="form-floating mb-4 position-relative">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Tu contraseña" required aria-describedby="passwordFeedback">
+            <label for="password">Contraseña</label>
+            <div id="passwordFeedback" class="invalid-feedback">
+                Por favor, ingresa tu contraseña.
+            </div>
+        </div>
+
+        <div class="dropdown mb-4">
+            <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownRolButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Seleccionar Rol
+            </button>
+            <ul class="dropdown-menu w-100" aria-labelledby="dropdownRolButton">
+                <li><a class="dropdown-item" href="#" data-rol="Paciente">Paciente</a></li>
+                <li><a class="dropdown-item" href="#" data-rol="Profesional">Profesional</a></li>
+                <li><a class="dropdown-item" href="#" data-rol="Personal">Personal</a></li>
+            </ul>
+            <input type="hidden" name="rol_seleccionado" id="rol_seleccionado_input" required>
+            <div class="invalid-feedback">Por favor, selecciona tu rol.</div>
+        </div>
+
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn-custom">Ingresar</button>
+        </div>
+
+        <div class="mt-4 text-center">
+            <p>¿Eres un paciente nuevo? ¿No tienes una cuenta? <a href="{{ url_for('auth.registro') }}" class="text-decoration-none" style="color: var(--verde); font-weight: 600;">Regístrate aquí</a></p>
+        </div>
+
+    </form>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show fixed-top mx-auto mt-3" role="alert" style="max-width: 500px; z-index: 1050;">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('.needs-validation');
+    form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        var rolInput = document.getElementById('rol_seleccionado_input');
+        if (!rolInput.value) {
+            rolInput.setCustomValidity('Por favor, selecciona tu rol.');
+        } else {
+            rolInput.setCustomValidity('');
+        }
+        form.classList.add('was-validated');
+    }, false);
+
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const selectedRol = this.getAttribute('data-rol');
+            const rolInput = document.getElementById('rol_seleccionado_input');
+            const rolButton = document.getElementById('dropdownRolButton');
+
+            rolButton.innerHTML = `${selectedRol}`;
+            rolInput.value = selectedRol;
+
+            rolInput.setCustomValidity('');
+            if (rolInput.value) {
+                rolInput.classList.remove('is-invalid');
+            }
+            form.classList.remove('was-validated');
+        });
+    });
+});
+</script>
+</body>
+</html>

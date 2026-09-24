@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Comidas Saludables</title>
+    
+    <!-- Estilos externos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/recetas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        body {
+            background-color: #f1f1f1;;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+        
+        .btn-submit {
+            display: inline-block;
+            background-color: var(--verde);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            margin-top: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--verde-oscuro);
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+/* Botón base */
+.btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 12px;
+    padding: 8px 20px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 12px var(--sombra);
+    border: none;
+}
+
+/* Botón Editar Cita */
+.btn-info.btn-sm {
+    background-color: var(--verde);
+    color: var(--blanco);
+}
+.btn-info.btn-sm:hover {
+    background-color: var(--verde-oscuro);
+}
+
+/* Botón Eliminar */
+.btn-danger.btn-sm {
+    background-color: #dc3545;
+    color: var(--blanco);
+}
+.btn-danger.btn-sm:hover {
+    background-color: #c82333;
+}
+
+/* Botón Aceptar */
+.btn-success.btn-sm {
+    background-color: var(--verde-oscuro);
+    color: var(--blanco);
+}
+.btn-success.btn-sm:hover {
+    background-color: #256629;
+}
+
+/* Botón Rechazar */
+.btn-warning.btn-sm {
+    background-color: #ffc107;
+    color: var(--negro);
+}
+.btn-warning.btn-sm:hover {
+    background-color: #e0a800;
+}
+
+/* Botón Cerrar (modal) */
+.modal-footer .btn-secondary {
+    background-color: var(--gris-medio);
+    color: var(--blanco);
+}
+.modal-footer .btn-secondary:hover {
+    background-color: #6c757d;
+}
+
+/* Botón Guardar Cambios */
+.modal-footer .btn-primary {
+    background-color: var(--verde);
+    color: var(--blanco);
+}
+.modal-footer .btn-primary:hover {
+    background-color: var(--verde-oscuro);
+}
+
+/* Botón Editar Perfil */
+a.btn-primary.mt-3 {
+    background-color: var(--verde);
+    color: var(--blanco);
+}
+a.btn-primary.mt-3:hover {
+    background-color: var(--verde-oscuro);
+}
+
+
+
+</style>
+
+   
+</head>
+<body>
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('profesional.dashboard_profesional') }}">SALUDME</a>        <ul class="nav-links">
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.dashboard_profesional' %}active{% endif %}" aria-current="page" href="{{ url_for('profesional.dashboard_profesional') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.gestion_pacientes' %}active{% endif %}" href="{{ url_for('profesional.gestion_pacientes') }}">Gestión De Pacientes</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.agenda' %}active{% endif %}" href="{{ url_for('profesional.agenda') }}">Agenda</a>
+                    <i class="fa-solid fa-calendar-days"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'profesional.gestion_recetas' %}active{% endif %}" href="{{ url_for('profesional.gestion_recetas') }}">Recetas</a>
+                <i class="fa-solid fa-book-open"></i>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.cuenta' %}active{% endif %}" href="{{ url_for('profesional.cuenta') }}">Cuenta</a>
+                    <i class="fa-solid fa-user-tie"></i>
+                </a>
+            </li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container-ficha">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1 class="section-title">Ficha del Paciente</h1>
+
+        <div class="profile-info">
+            <div class="profile-avatar">
+                <img src="{{ url_for('static', filename=paciente.foto) if paciente.foto else url_for('static', filename='default_patient.png') }}" alt="Foto de {{ paciente.nombres }}">
+            </div>
+            <div class="profile-details">
+                <h2>{{ paciente.nombres }} {{ paciente.apellidos }}</h2>
+                <p><strong>Cédula:</strong> {{ paciente.cedula }}</p>
+                <p><strong>Edad:</strong> {{ paciente.edad }} años</p>
+                <p><strong>Sexo:</strong> {{ paciente.sexo }}</p>
+                <p><strong>Email:</strong> {{ paciente.usuario.email }}</p>
+                <p><strong>Teléfono:</strong> {{ paciente.usuario.telefono if paciente.usuario.telefono else 'N/A' }}</p>
+                <p><strong>Objetivo:</strong> {{ paciente.objetivo }}</p>
+                <p><strong>Alergias/Condiciones:</strong> {{ paciente.antecedente_alergia }}</p>
+                <p><strong>Nivel de Actividad:</strong> {{ paciente.nivel_actividad }}</p>
+            </div>
+        </div>
+
+<h2 class="section-title">Historial de Progreso</h2>
+<div class="data-grid">
+    {% if progresos %}
+        {% for progreso in progresos %}
+            <div class="data-card">
+                <h4>Registro del {{ progreso.fecha.strftime('%d/%m/%Y') }}</h4>
+                <p><strong>Peso Actual:</strong> {{ progreso.peso_actual }} kg</p>
+                <p><strong>Altura:</strong> {{ paciente.altura }} m</p>
+                <p><strong>Circunferencia Cintura:</strong> {{ progreso.circunferencia_cintura if progreso.circunferencia_cintura is not none else 'N/A' }} cm</p>
+                <p><strong>IMC:</strong> {{ "%.2f"|format(progreso.imc) if progreso.imc is not none else 'N/A' }}</p>
+                <p><strong>Comentarios:</strong> {{ progreso.comentarios }}</p>
+                <p><strong>Recomendaciones:</strong> {{ progreso.recomendaciones }}</p>
+
+                <!-- Botón para eliminar -->
+                <a href="{{ url_for('profesional.eliminar_progreso', id=progreso.id) }}" 
+                   class="btn btn-sm btn-danger mt-2" 
+                   onclick="return confirm('¿Estás seguro de eliminar este progreso?');">
+                    Eliminar
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-data-message">Aún no hay registros de progreso para este paciente.</p>
+    {% endif %}
+</div>
+
+        <div class="form-section">
+            <h3>Registrar Nuevo Progreso</h3>
+            <form action="{{ url_for('profesional.guardar_progreso', id_paciente=paciente.id_Pacientes) }}" method="POST">
+                <div class="form-group">
+                    <label for="peso_actual">Peso Actual (kg):</label>
+                    <input type="number" id="peso_actual" name="peso_actual" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="altura_en_metros_float">Altura (m):</label>
+                    <input type="number" id="altura_en_metros_float" name="altura_en_metros_float" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="circunferencia_cintura">Circunferencia de Cintura (cm, opcional):</label>
+                    <input type="number" id="circunferencia_cintura" name="circunferencia_cintura" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="comentarios">Comentarios:</label>
+                    <textarea id="comentarios" name="comentarios" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="recomendaciones">Recomendaciones:</label>
+                    <textarea id="recomendaciones" name="recomendaciones" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Guardar Progreso</button>
+            </form>
+        </div>
+
+
+<h2 class="section-title">Citas Agendadas</h2>
+<div class="data-grid">
+    {% if consultas %}
+        {% for consulta in consultas %}
+            <div class="data-card">
+                <h4>Cita con {{ consulta.profesional.nombre }} {{ consulta.profesional.apellido_P }}</h4>
+                <p><strong>Fecha:</strong> {{ consulta.fecha.strftime('%d/%m/%Y') }}</p>
+                <p><strong>Hora:</strong> {{ consulta.hora.strftime('%H:%M') }}</p>
+                <p><strong>Estado:</strong> {{ consulta.estado }}</p>
+                <p><strong>Solicitada por:</strong>
+                    {% if consulta.solicitada_por == 'paciente' %}
+                        Paciente
+                        <div class="d-flex gap-2 mt-2">
+                            <form method="POST" action="{{ url_for('profesional.responder_consulta', id=consulta.id_consulta) }}">
+                                <input type="hidden" name="accion" value="aceptar">
+                                <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('profesional.responder_consulta', id=consulta.id_consulta) }}">
+                                <input type="hidden" name="accion" value="rechazar">
+                                <button type="submit" class="btn btn-warning btn-sm">Rechazar</button>
+                            </form>
+                        </div>
+                    {% elif consulta.solicitada_por == 'profesional' %}
+                        Profesional
+                        <button type="button" class="btn btn-info btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#editarCitaModal{{ consulta.id_consulta }}">
+                            Editar
+                        </button>
+                    {% else %}
+                        Desconocido
+                    {% endif %}
+                </p>
+
+                <a href="{{ url_for('profesional.eliminar_consulta', id=consulta.id_consulta) }}"
+                   class="btn btn-sm btn-danger mt-2"
+                   onclick="return confirm('¿Estás seguro de eliminar esta cita?');">
+                    Eliminar
+                </a>
+            </div>
+
+            <!-- Modal para editar cita -->
+            <div class="modal fade" id="editarCitaModal{{ consulta.id_consulta }}" tabindex="-1"
+                 aria-labelledby="editarCitaModalLabel{{ consulta.id_consulta }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST" action="{{ url_for('profesional.editar_consulta', id=consulta.id_consulta) }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editarCitaModalLabel{{ consulta.id_consulta }}">Editar Cita</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="fecha{{ consulta.id_consulta }}" class="form-label">Fecha</label>
+                                    <input type="date" class="form-control" name="fecha"
+                                           id="fecha{{ consulta.id_consulta }}"
+                                           value="{{ consulta.fecha.strftime('%Y-%m-%d') }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="hora{{ consulta.id_consulta }}" class="form-label">Hora</label>
+                                    <input type="time" class="form-control" name="hora"
+                                           id="hora{{ consulta.id_consulta }}"
+                                           value="{{ consulta.hora.strftime('%H:%M') }}" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-data-message">No hay citas agendadas para este paciente.</p>
+    {% endif %}
+</div>
+
+ 
+
+<h2 class="section-title">Recetas Asignadas</h2>
+<div class="data-grid">
+    {% if recetas_asignadas %}
+        {% for asignacion_receta in recetas_asignadas %}
+            <div class="data-card receta-asignada-card">
+                <div class="receta-asignada-media">
+                    <img src="{{ url_for('static', filename=asignacion_receta.receta.foto) if asignacion_receta.receta.foto else url_for('static', filename='img/recipes/default_recipe.png') }}" alt="{{ asignacion_receta.receta.nombre }}">
+                    {% if asignacion_receta.receta.categoria %}
+                        <span class="recipe-badge">{{ asignacion_receta.receta.categoria }}</span>
+                    {% endif %}
+                </div>
+                <div class="receta-asignada-body">
+                    <h4>{{ asignacion_receta.receta.nombre }}</h4>
+                    <p class="receta-asignada-fecha"><i class="fa-regular fa-calendar"></i> Asignada el {{ asignacion_receta.fecha_asignacion.strftime('%d/%m/%Y') }}</p>
+
+                    <div class="recipe-block">
+                        <span class="recipe-block-title"><i class="fa-solid fa-align-left"></i> Descripción</span>
+                        <p>{{ asignacion_receta.receta.descripcion if asignacion_receta.receta.descripcion else 'Sin descripción.' }}</p>
+                    </div>
+
+                    <div class="recipe-block">
+                        <span class="recipe-block-title"><i class="fa-solid fa-leaf"></i> Ingredientes</span>
+                        <p>{{ asignacion_receta.receta.ingredientes if asignacion_receta.receta.ingredientes else 'Sin ingredientes.' }}</p>
+                    </div>
+
+                    <div class="recipe-block">
+                        <span class="recipe-block-title"><i class="fa-solid fa-fire-burner"></i> Preparación</span>
+                        <p>{{ asignacion_receta.receta.instrucciones if asignacion_receta.receta.instrucciones else 'Aún sin preparación.' }}</p>
+                    </div>
+
+                    <div class="receta-asignada-acciones">
+                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarRecetaModal{{ asignacion_receta.id_asignar_r }}">Editar</button>
+                        <a href="{{ url_for('profesional.eliminar_receta_asignada', id=asignacion_receta.id_asignar_r) }}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('¿Estás seguro de eliminar esta receta?');">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="editarRecetaModal{{ asignacion_receta.id_asignar_r }}" tabindex="-1" aria-labelledby="editarRecetaModalLabel{{ asignacion_receta.id_asignar_r }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST" action="{{ url_for('profesional.editar_receta_asignada', id=asignacion_receta.id_asignar_r) }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editarRecetaModalLabel{{ asignacion_receta.id_asignar_r }}">Editar Receta Asignada</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="id_receta_{{ asignacion_receta.id_asignar_r }}" class="form-label">Receta</label>
+                                    <select name="id_receta" id="id_receta_{{ asignacion_receta.id_asignar_r }}" class="form-select">
+                                        {% for receta in recetas_disponibles %}
+                                            <option value="{{ receta.id_recetas }}" {% if receta.id_recetas == asignacion_receta.id_recetas %}selected{% endif %}>{{ receta.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="fecha_{{ asignacion_receta.id_asignar_r }}" class="form-label">Fecha de asignación</label>
+                                    <input type="date" name="fecha_asignacion" id="fecha_{{ asignacion_receta.id_asignar_r }}" class="form-control" value="{{ asignacion_receta.fecha_asignacion.strftime('%Y-%m-%d') }}">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-data-message">No hay recetas asignadas a este paciente.</p>
+    {% endif %}
+</div>
+
+
+
+<div class="form-section">
+    <h3>Asignar Nueva Receta</h3>
+    <form action="{{ url_for('profesional.asignar_receta', id_paciente=paciente.id_Pacientes) }}" method="POST">
+        <div class="form-group">
+            <label for="id_receta">Seleccionar Receta:</label>
+            <select id="id_receta" name="id_receta" class="form-control" required>
+                <option value="">-- Seleccione una receta --</option>
+                {% for receta in recetas_disponibles %}
+                    <option value="{{ receta.id_recetas }}">{{ receta.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn-submit">Asignar Receta</button>
+    </form>
+</div>
+
+
+<h2 class="section-title">Productos Asignados</h2>
+<div class="data-grid">
+    {% if productos_asignados %}
+        {% for asignacion_producto in productos_asignados %}
+            <div class="data-card">
+                <h4>{{ asignacion_producto.producto.nombre }}</h4>
+                <p><strong>Descripción:</strong> {{ asignacion_producto.producto.descripcion }}</p>
+                {% if asignacion_producto.producto %}
+                    <p><strong>Precio:</strong> ${{ "%.2f"|format(asignacion_producto.producto.precio) }}</p>
+                {% else %}
+                    <p><strong>Precio:</strong> No disponible</p>
+                {% endif %}
+                <p><strong>Asignado el:</strong> {{ asignacion_producto.fecha_asignacion.strftime('%d/%m/%Y') }}</p>
+
+                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarProductoModal{{ asignacion_producto.id_asignar_p }}">
+                    Editar
+                </button>
+
+                <a href="{{ url_for('profesional.eliminar_producto_asignado', id=asignacion_producto.id_asignar_p) }}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('¿Estás seguro de eliminar este producto?');">Eliminar</a>
+            </div>
+
+            <div class="modal fade" id="editarProductoModal{{ asignacion_producto.id_asignar_p }}" tabindex="-1" aria-labelledby="editarProductoModalLabel{{ asignacion_producto.id_asignar_p }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST" action="{{ url_for('profesional.editar_producto_asignado', id=asignacion_producto.id_asignar_p) }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editarProductoModalLabel{{ asignacion_producto.id_asignar_p }}">Editar Producto Asignado</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="id_producto_{{ asignacion_producto.id_asignar_p }}" class="form-label">Producto</label>
+                                    <select name="id_producto" id="id_producto_{{ asignacion_producto.id_asignar_p }}" class="form-select">
+                                        {% for producto in productos_disponibles %}
+                                            <option value="{{ producto.id }}" {% if producto.id == asignacion_producto.id_Producto %}selected{% endif %}>{{ producto.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="fecha_{{ asignacion_producto.id_asignar_p }}" class="form-label">Fecha de asignación</label>
+                                    <input type="date" name="fecha_asignacion" id="fecha_{{ asignacion_producto.id_asignar_p }}" class="form-control" value="{{ asignacion_producto.fecha_asignacion.strftime('%Y-%m-%d') }}">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-data-message">No hay productos asignados a este paciente.</p>
+    {% endif %}
+</div>
+
+
+
+<div class="form-section">
+    <h3>Asignar Nuevo Producto</h3>
+    <form action="{{ url_for('profesional.asignar_producto', id_paciente=paciente.id_Pacientes) }}" method="POST">
+        <div class="form-group">
+            <label for="id_producto">Seleccionar Producto:</label>
+            <select id="id_producto" name="id_producto" class="form-control" required>
+                <option value="">-- Seleccione un producto --</option>
+                {% for producto in productos_disponibles %}
+                    <option value="{{ producto.id_producto }}">{{ producto.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn-submit">Asignar Producto</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+  

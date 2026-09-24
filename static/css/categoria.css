@@ -1,0 +1,75 @@
+       .categorias-section h2 {
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: var(--negro); /* Usando variable --negro */
+            font-weight: 700;
+        }
+
+        .categorias-grid {
+            display: flex; /* Originalmente flex */
+            gap: 2.5rem; /* Originalmente 2.5rem */
+            justify-content: center;
+            align-items: stretch;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .categoria-item {
+            background: var(--gris-claro); /* Usando variable --gris-claro */
+            border-radius: 500px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            padding: 24px 18px;
+            text-align: center;
+            width: 160px; /* Ancho original del usuario */
+            height: 160px; /* Altura original del usuario */
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: var(--negro); /* Usando variable --negro */
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .categoria-item i {
+            font-size: 2.3rem;
+            margin-bottom: 12px;
+            color: var(--verde-oscuro); /* Usando variable --verde-oscuro */
+        }
+
+        .categoria-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .categoria-item p {
+            font-size: 1rem;
+            color: #555; /* No hay variable para este color, se mantiene literal */
+        }
+
+        .categoria-item:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+            background: var(--verde-claro); /* Usando variable --verde-claro */
+        }
+
+        @media (max-width: 768px) {
+            .categorias-section {
+                padding: 20px 15px;
+                margin-top: 20px;
+            }
+            .categorias-section h2 {
+                font-size: 1.8rem;
+            }
+            .categorias-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 10px;
+            }
+            .categoria-item i {
+                font-size: 2rem;
+            }
+            .categoria-item h3 {
+                font-size: 0.9rem;
+            }
+        }

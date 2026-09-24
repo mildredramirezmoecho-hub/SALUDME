@@ -1,0 +1,143 @@
+
+
+
+.container {
+    font-family: 'Nunito', sans-serif;
+    position: relative;
+    top: 100px; /* Mantiene tu desplazamiento vertical */
+    max-width: 1200px; /* Aumento a un ancho más adecuado para pantallas grandes */
+    width: 90%; /* Asegura que no sea demasiado ancho en pantallas pequeñas */
+    min-width: 90%;
+    margin: 40px auto;
+    padding: 40px; /* Incrementamos el padding para más espacio interno */
+    background-color: var(--blanco);
+    border-radius: 20px; /* Bordes más pronunciados para un look moderno */
+    box-shadow: 0 10px 30px var(--sombra-suave); /* Sombra más grande y suave para efecto elevado */
+    box-sizing: border-box; /* Crucial para que padding no afecte el ancho total */
+}
+h1 {
+    color: var(--sombra); /* Color oscuro y distintivo */
+    text-align: center;
+    margin-bottom: 40px; /* Más espacio debajo del título principal */
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800; /* Un poco más de grosor para mayor impacto */
+    font-size: 2.5rem; /* Tamaño de fuente más grande */
+}
+
+h2 {
+    position: relative;
+    color: var(--sombra);
+    left: 50px;
+    margin-top: 70px; /* Más espacio antes de cada sección nueva */
+    margin-bottom: 10px; /* Buen espacio después del subtítulo */
+    padding-bottom: 30px; /* Más padding para la línea inferior */
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600 /* Negrita para mejor jerarquía */!important;
+    font-size: 1.8rem; /* Tamaño adecuado para un subtítulo */
+}
+
+/* CONSULTAS PENDIENTES */
+.consultas-container {
+    display: grid;
+    max-width: 95%;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    margin: 0 auto 40px auto;
+    gap: 60px;
+    margin-bottom: 50px;
+}
+
+.consulta-box {
+    background-color: #f5f4f4;
+    border: 1px solid #f2f1f1;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 3px 8px var(--sombra);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+}
+
+
+.consulta-box:hover {
+   background-color: #f1f1f1;
+}
+
+.consulta-title {
+    font-weight: 700;
+    color: var(--color-principal);
+    font-size: 1.4rem; /* Título de la tarjeta más grande */
+    margin-bottom: 15px;
+}
+
+.consulta-content {
+    flex-grow: 1;
+    font-size: 1rem; /* Texto del contenido más legible */
+    line-height: 1.6; /* Mayor interlineado */
+    margin-bottom: 20px;
+    color: var(--color-texto);
+}
+
+.button-group {
+    text-align: right;
+    margin-top: auto; /* Empuja el botón al final si el contenido varía */
+}
+
+.btn-agendar {
+    background-color: var(--verde)!important;
+    color: var(--blanco); /* Usar blanco de la variable o directamente #fff */
+    border: none;
+    padding: 12px 22px; /* Botón ligeramente más grande */
+    border-radius: 8px; /* Bordes más redondeados para el botón */
+    color:var(--blanco)!important;
+    font-weight: 600 !important;
+    font-size: 1.05rem; /* Tamaño de fuente del botón más claro */
+    cursor: pointer;
+}
+
+.btn-agendar:hover {
+    background-color: var(--color-acentado-hover);
+}
+
+.btn-agendar:active {
+    transform: translateY(0); /* Efecto de pulsación */
+    background-color: darken(var(--color-acentado-hover), 5%); /* Ligeramente más oscuro al presionar */
+}
+
+/* ÚLTIMAS CONSULTAS */
+#ultimas-consultas-container {
+    background-color: #f5f4f4;
+    border: 1px solid #f2f1f1;
+    border-radius: 12px; /* Ligeramente más redondeado para suavidad */
+    padding: 25px; /* Más espacio interno */
+    box-shadow: 0 6px 20px var(--sombra-suave); /* Sombra más pronunciada y suave */
+    display: block;
+    min-width: 90%;
+    width: 90%; /* Mantén este ancho o ajústalo según necesites */
+    max-width: 960px; /* **Importante:** Añade un max-width para que no sea demasiado ancho en pantallas grandes */
+    margin: 0 auto; /* **Esto centra el contenedor horizontalmente** */
+}
+
+.p{
+    padding: 15px 0;
+    border-bottom: 1px dashed var(--color-destacado);
+}
+
+.p-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: var(--color-principal);
+    margin-bottom: 6px;
+}
+
+.consulta-item-date {
+    font-size: 0.85rem;
+    color: #9a8d8d;
+}
+
+.consulta-item-content {
+    font-size: 0.95rem;
+    color: var(--color-texto);
+    line-height: 1.4;
+}

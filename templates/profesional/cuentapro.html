@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Comidas Saludables</title>
+    
+    <!-- Estilos externos -->
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/cuenta.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+       body {
+            background-color: #f1f1f1;;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+
+    <!-- NAVBAR -->
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('profesional.dashboard_profesional') }}">SALUDME</a>        <ul class="nav-links">
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.dashboard_profesional' %}active{% endif %}" aria-current="page" href="{{ url_for('profesional.dashboard_profesional') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.gestion_pacientes' %}active{% endif %}" href="{{ url_for('profesional.gestion_pacientes') }}">Gestión De Pacientes</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.agenda' %}active{% endif %}" href="{{ url_for('profesional.agenda') }}">Agenda</a>
+                    <i class="fa-solid fa-calendar-days"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'profesional.gestion_recetas' %}active{% endif %}" href="{{ url_for('profesional.gestion_recetas') }}">Recetas</a>
+                <i class="fa-solid fa-book-open"></i>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.cuenta' %}active{% endif %}" href="{{ url_for('profesional.cuenta') }}">Cuenta</a>
+                    <i class="fa-solid fa-user-tie"></i>
+                </a>
+            </li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+  <div class="container perfil-nutricionista">
+        <h1>Perfil del Profesional</h1>
+
+        {# Mensajes flash de Flask #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="perfil-info">
+            <div class="perfil-avatar">
+                {# Muestra la foto del profesional o una por defecto #}
+                <img src="{{ url_for('static', filename=profesional.foto) if profesional.foto else url_for('static', filename='img/professionals/default_nutri.png') }}" alt="Foto de {{ profesional.nombre }} {{ profesional.apellido_P }}">
+            </div>
+            <div class="perfil-datos">
+                <h2>{{ profesional.nombre }} {{ profesional.apellido_P }} {{ profesional.apellido_M }}</h2> {# Incluido apellido_M #}
+                <p><strong>Especialidad:</strong> {{ profesional.especialidad }}</p>
+                <p><strong>Cédula:</strong> {{ profesional.cedula }}</p>
+                <p><strong>Email:</strong> {{ profesional.usuario.email }}</p> {# Acceso al email a través de la relación con Usuario #}
+                <p><strong>Teléfono:</strong> {{ profesional.telefono }}</p>
+                <p><strong>Experiencia:</strong> {{ profesional.experiencia }} años</p>
+                <p><strong>Descripción:</strong> {{ profesional.descripcion }}</p>
+                {# Este botón necesita una ruta para editar el perfil del profesional, no del paciente #}
+                <a href="{{ url_for('profesional.editar_perfil_profesional', id_profesional=profesional.id_profesional) }}" class="btn btn-success">Editar Perfil</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

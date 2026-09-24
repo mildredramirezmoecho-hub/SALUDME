@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - SaludMe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde-oscuro: #2e7d32;
+            --verde: #56946df1;
+            --verde-claro: #c8e6c9;
+            --blanco: #ffffff;
+            --gris-claro: #f1f1f1;
+            --gris-medio: #888888;
+            --sombra: rgba(0, 0, 0, 0.05);
+            --negro: #212121;
+            --import: #f5f4f4;
+            --text-color: #333;
+            --white-color: #fff;
+            --secondary-color: #f4e2dc;
+        }
+
+        body {
+            background-color: var(--gris-claro);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 100px; /* Espacio para el navbar fijo */
+        }
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 1.15rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #f0f0f0;
+            font-weight: 700;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: #f0f0f0;
+        }
+
+        .nav-links a.active {
+            color: #212121;
+            font-weight: 900;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item i {
+            margin-right: 0.5rem;
+            text-decoration: none;
+        }
+
+        .main-content {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto 20px auto;
+            padding: 30px;
+            background-color: var(--blanco);
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: var(--verde-oscuro);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .table thead th {
+            background-color: var(--verde);
+            color: var(--blanco);
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table tbody tr {
+            background-color: var(--import);
+            transition: background-color 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--verde-claro);
+        }
+
+        .table tbody td {
+            vertical-align: middle;
+            text-align: center;
+            color: var(--negro);
+        }
+
+        .btn-add {
+            background-color: var(--verde-oscuro);
+            border-color: var(--verde-oscuro);
+        }
+        .btn-add:hover {
+            background-color: #256a29;
+            border-color: #256a29;
+        }
+
+        .btn-edit {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .btn-edit:hover {
+            background-color: #0b5ed7;
+            border-color: #0b5ed7;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+            border-color: #c82333;
+        }
+
+        .modal-content {
+            border-radius: 1rem;
+        }
+        .modal-header {
+            background-color: var(--verde);
+            color: var(--blanco);
+        }
+        .modal-footer .btn {
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('personal.dashboard_personal') }}">SALUDME</a>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('personal.dashboard_personal') }}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-utensils"></i>
+                    <a class="nav-link" href="{{ url_for('personal.gestion_recetas') }}">Recetas</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-box"></i>
+                    <a class="nav-link" href="{{ url_for('personal.gestion_productos') }}">Productos</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-users"></i>
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('personal.gestion_usuarios') }}">Usuarios</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+                <button class="btn btn-outline-success btn-logout" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1>Gestión de Usuarios</h1>
+
+        {# Bloque para mostrar mensajes flash #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flashes mb-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+<!-- Botón para añadir usuario -->
+<button type="button" class="btn btn-add mb-3" data-bs-toggle="modal" data-bs-target="#usuarioModal" onclick="resetForm('usuarioForm')">
+    Añadir Nuevo Usuario
+</button>
+
+<!-- Tabla de usuarios -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for usuario in usuarios %}
+        <tr>
+            <td>{{ usuario.id_usuario }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>{{ usuario.rol }}</td>
+            <td>
+                <button type="button" class="btn btn-edit btn-sm" data-bs-toggle="modal" data-bs-target="#usuarioModal" data-id="{{ usuario.id_usuario }}">
+                    Editar
+                </button>
+                <form action="{{ url_for('personal.eliminar_usuario', id=usuario.id_usuario) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-delete btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar este usuario?');">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal para Añadir/Editar Usuario -->
+<div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="usuarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="usuarioModalLabel">Añadir/Editar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form id="usuarioForm" method="POST" action="{{ url_for('personal.agregar_usuario') }}">
+                <input type="hidden" id="usuarioId" name="id_usuario">
+                <div class="modal-body">
+                    <!-- Datos generales -->
+                    <div class="mb-3">
+                        <label for="emailUsuario" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="emailUsuario" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordUsuario" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="passwordUsuario" name="password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="rolUsuario" class="form-label">Rol</label>
+                        <select class="form-select" id="rolUsuario" name="rol" required>
+                            <option value="">Seleccionar Rol</option>
+                            <option value="Paciente">Paciente</option>
+                            <option value="Profesional">Profesional</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Administrador">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefonoUsuario" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" name="telefono" id="telefonoUsuario" pattern="\d{10}" maxlength="10" title="Debe ingresar un teléfono válido de 10 dígitos">
+                    </div>
+
+                    <!-- Campos del Profesional -->
+                    <div id="camposProfesional" style="display: none;">
+                        <h5 class="mb-3"></br>Datos del Profesional</br></h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombreProfesional" class="form-label">Primer Nombre</label>
+                                <input type="text" class="form-control" name="nombre" id="nombreProfesional">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="nombreSegundo" class="form-label">Segundo Nombre</label>
+                                <input type="text" class="form-control" name="nombre_segundo" id="nombreSegundo">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellidoP" class="form-label">Apellido Paterno</label>
+                                <input type="text" class="form-control" name="apellido_P" id="apellidoP">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellidoM" class="form-label">Apellido Materno</label>
+                                <input type="text" class="form-control" name="apellido_M" id="apellidoM">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cedulaProfesional" class="form-label">Cédula</label>
+                                <input type="text" class="form-control" name="cedula" id="cedulaProfesional">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="especialidadProfesional" class="form-label">Especialidad</label>
+                                <input type="text" class="form-control" name="especialidad" id="especialidadProfesional">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="experienciaProfesional" class="form-label">Años de experiencia</label>
+                                <input type="number" class="form-control" name="experiencia" id="experienciaProfesional">
+                            </div>
+                            <div class="mb-3">
+                                <label for="descripcionProfesional" class="form-label">Descripción</label>
+                                <textarea class="form-control" name="descripcion" id="descripcionProfesional" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const usuarioModal = document.getElementById('usuarioModal');
+        const camposProfesional = document.getElementById('camposProfesional');
+        const rolSelect = document.getElementById('rolUsuario');
+        const telefonoInput = document.getElementById('telefonoUsuario');
+        const usuarioForm = document.getElementById('usuarioForm');
+        const usuarioModalLabel = document.getElementById('usuarioModalLabel');
+
+        /**
+         * Toggles the visibility of professional-specific fields based on the selected role.
+         * Sets the 'telefonoUsuario' field as required if the role is 'profesional'.
+         * @param {string} rol - The role of the user (e.g., 'profesional', 'cliente').
+         */
+        function toggleCamposProfesional(rol) {
+            const isProfesional = rol.toLowerCase() === 'profesional';
+            camposProfesional.style.display = isProfesional ? 'block' : 'none';
+            telefonoInput.required = isProfesional;
+        }
+
+        // Event listener for changes in the user role dropdown
+        rolSelect.addEventListener('change', function () {
+            toggleCamposProfesional(this.value);
+        });
+
+        // Event listener for when the user modal is shown
+        usuarioModal.addEventListener('show.bs.modal', async function (event) {
+            const button = event.relatedTarget; // Button that triggered the modal
+            const userId = button.getAttribute('data-id');
+
+            // Reset the form whenever the modal is opened
+            usuarioForm.reset(); 
+            toggleCamposProfesional(''); // Hide professional fields initially
+
+            if (userId) {
+                // Edit existing user
+                usuarioModalLabel.textContent = 'Editar Usuario';
+                usuarioForm.action = `{{ url_for('personal.editar_usuario', id=0) }}`.replace('0', userId);
+
+                try {
+                    const userResponse = await fetch(`/personal/api/obtener_usuario/${userId}`);
+                    if (!userResponse.ok) {
+                        throw new Error(`HTTP error! status: ${userResponse.status}`);
+                    }
+                    const userData = await userResponse.json();
+
+                    // Populate general user fields
+                    document.getElementById('usuarioId').value = userData.id_usuario;
+                    document.getElementById('emailUsuario').value = userData.email;
+                    rolSelect.value = userData.rol;
+                    telefonoInput.value = userData.telefono;
+                    toggleCamposProfesional(userData.rol);
+
+                    // If the user is a professional, fetch and populate professional fields
+                    if (userData.rol.toLowerCase() === 'profesional') {
+                        const professionalResponse = await fetch(`/personal/api/obtener_profesional/${userData.id_usuario}`);
+                        if (!professionalResponse.ok) {
+                            throw new Error(`HTTP error! status: ${professionalResponse.status}`);
+                        }
+                        const professionalData = await professionalResponse.json();
+
+                        document.getElementById('nombreProfesional').value = professionalData.nombre || '';
+                        document.getElementById('nombreSegundo').value = professionalData.nombre_segundo || '';
+                        document.getElementById('apellidoP').value = professionalData.apellido_P || '';
+                        document.getElementById('apellidoM').value = professionalData.apellido_M || '';
+                        document.getElementById('cedulaProfesional').value = professionalData.cedula || '';
+                        document.getElementById('especialidadProfesional').value = professionalData.especialidad || '';
+                        document.getElementById('experienciaProfesional').value = professionalData.experiencia || '';
+                        document.getElementById('descripcionProfesional').value = professionalData.descripcion || '';
+                    }
+                } catch (error) {
+                    console.error('Error al cargar usuario o profesional:', error);
+                    // Optionally, display an error message to the user
+                }
+            } else {
+                // Create new user
+                usuarioModalLabel.textContent = 'Crear Usuario';
+                usuarioForm.action = "{{ url_for('personal.agregar_usuario') }}"; // Assuming a create endpoint
+            }
+        });
+    });
+
+    /**
+     * Resets a form by clearing input values.
+     * Note: This function was present in the original code but not defined.
+     * A basic implementation is provided here. You might have a more comprehensive
+     * `resetForm` function elsewhere in your project.
+     * @param {string} formId - The ID of the form to reset.
+     */
+    function resetForm(formId) {
+        const form = document.getElementById(formId);
+        if (form) {
+            form.querySelectorAll('input, select, textarea').forEach(field => {
+                if (field.type === 'checkbox' || field.type === 'radio') {
+                    field.checked = false;
+                } else {
+                    field.value = '';
+                }
+            });
+        }
+    }
+</script>
+</html>    
+</body>

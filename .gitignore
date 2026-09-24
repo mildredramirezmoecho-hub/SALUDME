@@ -1,0 +1,32 @@
+# ==========================================================
+# SALUDME — .gitignore
+# ==========================================================
+
+# Entorno virtual de Python
+.venv/
+venv/
+env/
+
+# Bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Variables de entorno / secretos locales
+.env
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Windows
+desktop.ini
+Thumbs.db
+
+# Copia duplicada obsoleta del proyecto (no usar; excluir del repo)
+SALUDABLE/
+
+# Flask
+instance/
+*.log

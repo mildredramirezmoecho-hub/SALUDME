@@ -1,0 +1,122 @@
+:root {
+    --verde-oscuro: #2e7d32;
+    --verde: #56946df1;
+    --verde-claro: #c8e6c9;
+    --blanco: #ffffff;
+    --gris-claro: #e5e5e5;
+    --gris-medio: #888888;
+    --sombra: rgba(0, 0, 0, 0.05);
+    --negro: #212121;
+    --import: #f5f4f4;
+}
+
+/* --- Modal personalizado --- */
+.modal-content {
+    background-color: var(--import);
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: none;
+}
+
+.modal-header, .modal-footer {
+    border: none;
+    background-color: var(--verde-claro);
+    border-radius: 15px 15px 0 0;
+}
+
+.modal-title {
+    color: var(--verde-oscuro);
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+.modal-body {
+    background-color: var(--blanco);
+    padding: 1.5rem;
+}
+
+.modal-body label {
+    color: var(--negro);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Campos del formulario */
+.modal-body input[type="date"],
+.modal-body input[type="time"],
+.modal-body select {
+    border-radius: 10px;
+    border: 1px solid var(--gris-claro);
+    padding: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Botón Guardar Cambios */
+.modal-footer .btn-primary {
+    background-color: var(--verde-oscuro);
+    color: var(--blanco);
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.modal-footer .btn-primary:hover {
+    background-color: #256429;
+}
+
+/* Botón Cerrar */
+.modal-footer .btn-secondary {
+    background-color: var(--gris-medio);
+    color: var(--blanco);
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.modal-footer .btn-secondary:hover {
+    background-color: #6e6e6e;
+}
+
+/* Botones adicionales */
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Botón Editar */
+.btn-info.btn-sm {
+    background-color: var(--verde);
+    color: var(--blanco);
+    border: none;
+}
+.btn-info.btn-sm:hover {
+    background-color: var(--verde-oscuro);
+}
+
+/* Botón Eliminar */
+.btn-danger.btn-sm {
+    background-color: #e74c3c;
+    color: var(--blanco);
+}
+.btn-danger.btn-sm:hover {
+    background-color: #c0392b;
+}
+
+/* Botón Aceptar */
+.btn-success.btn-sm {
+    background-color: var(--verde-oscuro);
+    color: var(--blanco);
+}
+.btn-success.btn-sm:hover {
+    background-color: #256429;
+}
+
+/* Botón Rechazar */
+.btn-warning.btn-sm {
+    background-color: #f1c40f;
+    color: var(--negro);
+}
+.btn-warning.btn-sm:hover {
+    background-color: #d4ac0d;
+}

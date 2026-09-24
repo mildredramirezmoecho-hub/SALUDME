@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comidas Saludable</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/biografiapro.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <style>
+    
+
+      body {
+    background-color: #f4e2dc;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-setif;
+    background-color: var(--blanco);
+    color: var(--blanco);
+}
+.main-content {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+
+.agenda .card-body {
+    background-color: #e5e5e5;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+h2.text-center {
+    font-family: 'Poppins', sans-setif;
+    position: relative;
+    font-size: 2rem;
+    color: #3d5a40;
+    font-weight: 550;
+    width: fit-content;
+}
+.btn{
+    background-color: var(--blanco);
+    color: var(--verde);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+        .btnagendar {
+            text-decoration: none;
+            color: var(--white-color);
+            background-color: var(--verde);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 700;
+            border-radius: 10px;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btnagendar:hover {
+            background-color: var(--verde-oscuro); /* Usar verde-oscuro para hover */
+            color: var(--white-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--sombra);
+        }
+
+        .buttonagendar:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px var(--sombra);
+        }
+
+
+        /* Mensaje de confirmación */
+        #mensajeConfirmacion {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 25px;
+            border-radius: 8px;
+            z-index: 9999;
+            display: none;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+
+
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('paciente.dashboard_paciente') }}">SALUDME</a> {# O podrías enviarlo a la ruta de login si es la página principal del sitio #}
+        <ul class="nav-links">
+            <li class="nav-item">
+                   <a class="nav-link " aria-current="page" href="{{ url_for('paciente.dashboard_paciente') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="{{ url_for('paciente.recetas_productos', filter='recetas') }}">Recetas</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                {# CAMBIO: Enlaza a la lista de consultas del paciente #}
+                <a class="nav-link  active" href="{{ url_for('paciente.solicitar_cita') }}">Consulta</a> {# Apunta a solicitar cita #}
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <a class="nav-link" href="{{ url_for('paciente.mi_progreso') }}">Cuenta</a>
+            </li>
+        </ul>
+            {# CAMBIO: Formulario de búsqueda transformado en botón de Cerrar Sesión #}
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST"> {# Asumiendo una ruta de logout en 'auth' Blueprint #}
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+
+
+
+   <section class="agenda container-center mt-5 pt-5">
+        <h2 class="text-center mb-5">Nuestros Nutricionistas</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {# Bucle para generar las tarjetas de nutricionistas dinámicamente #}
+            {% for profesional in profesionales %}
+            <div class="col">
+                <div class="card-body">
+                    {# Asume que tienes imágenes estáticas genéricas o que el profesional tiene una URL de imagen #}
+                    <img src="{{ url_for('static', filename=profesional.foto) if profesional.foto else url_for('static', filename='default_nutri.png') }}" alt="{{ profesional.nombre }} {{ profesional.apellido_P }}">
+                    <h5 class="card-title mb-3">Dr/a. {{ profesional.nombre }} {{ profesional.apellido_P }}</h5>
+                    <p class="card-text">{{ profesional.especialidad }} y {{ profesional.descripcion }}.</p>
+                    <ul class="list-unstyled">
+                        <li><strong>Teléfono:</strong> {{ profesional.telefono }}</li>
+                        <li><strong>Email:</strong> {{ profesional.usuario.email }}</li> {# Accede al email a través de la relación con Usuario #}
+                        {# Horario no está directamente en Profesional, podrías añadirlo o mostrar un genérico #}
+                        <li><strong>Experiencia:</strong> {{ profesional.experiencia }} años</li>
+                    </ul>
+                    {# Botón para agendar cita, pasa el ID del profesional y su nombre al modal #}
+                    <button type="buttonagendar" class="btnagendar btn-primary agendar-btn"
+                                data-bs-toggle="modal" data-bs-target="#agendarCitaModal"
+                                data-id-profesional="{{ profesional.id_profesional }}"
+                                data-nombre-profesional="Dra. {{ profesional.nombre }} {{ profesional.apellido_P }}">
+                        Agendar Cita
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+   {# Modal Único para Agendar Cita #}
+    <div class="modal fade" id="agendarCitaModal" tabindex="-1" aria-labelledby="agendarCitaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agendarCitaModalLabel">Agendar Cita con <span id="nombreProfesionalModal"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    {# CAMBIO: Renombrado el ID del formulario para evitar conflictos #}
+                    <form id="agendarCitaForm">
+                        {# Campo oculto para el ID del profesional seleccionado #}
+                        <input type="hidden" id="idProfesionalSeleccionado" name="id_profesional">
+
+                        <div class="mb-3">
+                            <label for="fechaCita" class="form-label" style="color: var(--negro);">Fecha:</label>
+                            <input type="date" class="form-control" id="fechaCita" name="fecha" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="horaCita" class="form-label" style="color: var(--negro);">Hora:</label>
+                            <input type="time" class="form-control" id="horaCita" name="hora" required>
+                        </div>
+                        {# Estos campos (nombre y email del paciente) no son necesarios si el paciente ya está logueado #}
+                        {# y su información se puede obtener del `session` en el controlador. #}
+                        {# Si aún los necesitas para confirmación visual, puedes mantenerlos, pero no se enviarán al controlador #}
+                        {# a menos que los manejes explícitamente en el JS o en el formulario de Flask. #}
+                        <div class="mb-3">
+                            <label for="nombrePaciente" class="form-label" style="color: var(--negro);">Tu Cédula:</label>
+                            <input type="text" class="form-control" id="nombrePaciente" value="{{ paciente.cedula }}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailPaciente" class="form-label" style="color: var(--negro);">Tu Email:</label>
+                            <input type="email" class="form-control" id="emailPaciente" value="{{ paciente.usuario.email }}" disabled>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    {# CAMBIO: El botón de submit ahora apunta al nuevo ID del formulario del modal #}
+                    <button type="submit" form="agendarCitaForm" class="btn btn-primary">Confirmar Cita</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{# Contenedor para mensajes de confirmación (asegúrate de que este elemento exista) #}
+<div id="mensajeConfirmacion" style="display: none;"></div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        console.log("Script execution started."); // Added for debugging
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Define las URLs de Flask como variables JavaScript
+            const solicitarCitaUrl = "{{ url_for('paciente.solicitar_cita') }}"; // Ahora esta es la URL para solicitar cita
+            const misConsultasUrl = "{{ url_for('paciente.mis_consultas') }}"; // URL para ver historial de citas
+
+            const agendarCitaModal = document.getElementById('agendarCitaModal');
+            const nombreProfesionalModal = document.getElementById('nombreProfesionalModal');
+            const idProfesionalSeleccionadoInput = document.getElementById('idProfesionalSeleccionado');
+            const agendarCitaForm = document.getElementById('agendarCitaForm'); // CAMBIO: Nuevo ID del formulario del modal
+            const fechaCitaInput = document.getElementById('fechaCita');
+            const horaCitaInput = document.getElementById('horaCita');
+
+            // Event listener para abrir el modal y pasar datos del profesional
+            if (agendarCitaModal) {
+                agendarCitaModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const idProfesional = button.getAttribute('data-id-profesional');
+                    const nombreProfesional = button.getAttribute('data-nombre-profesional');
+
+                    if (nombreProfesionalModal) {
+                        nombreProfesionalModal.textContent = nombreProfesional;
+                    }
+                    if (idProfesionalSeleccionadoInput) {
+                        idProfesionalSeleccionadoInput.value = idProfesional;
+                    }
+                });
+            }
+
+            // Event listener para el envío del formulario del modal
+            if (agendarCitaForm) { // CAMBIO: Usar el nuevo ID del formulario
+                agendarCitaForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+
+                    const fechaSeleccionada = new Date(fechaCitaInput.value + 'T' + horaCitaInput.value);
+                    const ahora = new Date();
+
+                    if (fechaSeleccionada < ahora) {
+                        mostrarMensaje('La fecha y hora de la cita no pueden ser en el pasado.', 'error');
+                        return;
+                    }
+
+                    const formData = new FormData(agendarCitaForm); // CAMBIO: Usar el nuevo ID del formulario
+                    // Convertir FormData a URLSearchParams para enviar como application/x-www-form-urlencoded
+                    const data = new URLSearchParams(formData).toString();
+
+                    try {
+                        // Usa la variable JavaScript para la URL de solicitud de cita
+                        const response = await fetch(solicitarCitaUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded' // CAMBIO: Indicar que enviamos form-urlencoded
+                            },
+                            body: data // CAMBIO: Enviar como URLSearchParams string
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            mostrarMensaje(result.message || 'Cita agendada con éxito.', 'success');
+                            const bsModal = bootstrap.Modal.getInstance(agendarCitaModal);
+                            if (bsModal) bsModal.hide();
+
+                            setTimeout(() => {
+                                // Usa la variable JavaScript para la URL de historial de consultas
+                                window.location.href = misConsultasUrl;
+                            }, 2000);
+
+                        } else {
+                            mostrarMensaje(result.message || 'Error al agendar la cita.', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error al enviar la solicitud:', error);
+                        mostrarMensaje('Ocurrió un error de red o del servidor.', 'error');
+                    }
+                });
+            }
+
+            function mostrarMensaje(mensaje, tipo) {
+                let mensajeConfirmacion = document.getElementById('mensajeConfirmacion');
+                if (!mensajeConfirmacion) {
+                    mensajeConfirmacion = document.createElement('div');
+                    mensajeConfirmacion.id = 'mensajeConfirmacion';
+                    document.body.appendChild(mensajeConfirmacion);
+                }
+
+                mensajeConfirmacion.textContent = mensaje;
+                if (tipo === 'success') {
+                    mensajeConfirmacion.style.backgroundColor = '#e9ffe9';
+                    mensajeConfirmacion.style.borderColor = '#d4edda';
+                    mensajeConfirmacion.style.color = '#155724';
+                } else if (tipo === 'error') {
+                    mensajeConfirmacion.style.backgroundColor = '#ffe9e9';
+                    mensajeConfirmacion.style.borderColor = '#edc4c4';
+                    mensajeConfirmacion.style.color = '#721c24';
+                }
+                mensajeConfirmacion.style.display = 'block';
+
+                setTimeout(() => {
+                    mensajeConfirmacion.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+
+</body>
+</html>

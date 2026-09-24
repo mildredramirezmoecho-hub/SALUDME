@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Gestión de Recetas</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: var(--negro);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
+        .content-card {
+            background-color: var(--blanco);
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
+            margin: 8rem auto 2rem auto;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 1300px;
+        }
+
+        /* ----- Toolbar: título + contador + buscador + acción principal ----- */
+        .recetas-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .recetas-toolbar-titulo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .recetas-toolbar h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--negro);
+        }
+
+        .recetas-toolbar-acciones {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recetas-buscador {
+            min-width: 230px;
+        }
+
+        .badge-contador {
+            background-color: var(--verde-claro);
+            color: var(--verde-oscuro);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 7px 13px;
+            border-radius: 500px;
+        }
+
+        /* ----- Tarjetas del listado ----- */
+        .receta-card {
+            border: none;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .receta-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        .receta-card-media {
+            position: relative;
+        }
+
+        .receta-card-media img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            background-color: var(--gris-claro);
+        }
+
+        .receta-card-categoria {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--verde);
+            color: var(--blanco);
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 500px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.20);
+        }
+
+        .receta-card .card-title {
+            font-weight: 700;
+            color: var(--verde-oscuro);
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        .receta-card-desc {
+            font-size: 0.88rem;
+            color: var(--negro);
+            line-height: 1.5;
+            margin: 10px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .receta-card-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 10px;
+        }
+
+        .receta-card-info .badge {
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+
+        .badge-ing {
+            background-color: var(--import);
+            color: var(--verde-oscuro);
+        }
+
+        .badge-prep-si {
+            background-color: var(--verde-claro);
+            color: var(--verde-oscuro);
+        }
+
+        .badge-prep-no {
+            background-color: #eeeeee;
+            color: #888888;
+        }
+
+        /* Extracto de la preparación dentro de la tarjeta */
+        .receta-card-prep {
+            background-color: var(--import);
+            border-left: 4px solid var(--verde);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 0.82rem;
+            color: var(--negro);
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .receta-card-prep strong {
+            display: block;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--verde-oscuro);
+            margin-bottom: 3px;
+        }
+
+        /* ----- Acciones organizadas en el pie de cada tarjeta ----- */
+        .receta-card-footer {
+            background-color: var(--blanco);
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 12px 18px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .btn-editar {
+            background-color: var(--verde);
+            border-color: var(--verde);
+            color: var(--blanco);
+        }
+
+        .btn-editar:hover {
+            background-color: var(--verde-oscuro);
+            border-color: var(--verde-oscuro);
+            color: var(--blanco);
+        }
+
+        .btn-eliminar {
+            background-color: transparent;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .btn-eliminar:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: var(--blanco);
+        }
+
+        .btn-add {
+            background-color: var(--verde-oscuro);
+            border-color: var(--verde-oscuro);
+            color: var(--blanco);
+            font-weight: 600;
+        }
+
+        .btn-add:hover {
+            background-color: #256a29;
+            border-color: #256a29;
+            color: var(--blanco);
+        }
+
+        /* ----- Modal del formulario ----- */
+        .modal-content {
+            border-radius: 1rem;
+        }
+
+        .modal-header {
+            background-color: var(--verde);
+            color: var(--blanco);
+        }
+
+        .modal-footer .btn {
+            border-radius: 0.5rem;
+        }
+
+        .form-section-title {
+            grid-column: 1 / -1;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--verde-oscuro);
+            border-bottom: 1px solid var(--verde-claro);
+            padding-bottom: 5px;
+            margin-top: 6px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .content-card {
+                padding: 1.3rem;
+                margin-top: 7rem;
+            }
+
+            .recetas-toolbar {
+                justify-content: center;
+            }
+
+            .recetas-toolbar h1 {
+                font-size: 1.45rem;
+                text-align: center;
+            }
+
+            .recetas-buscador {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .recetas-toolbar-acciones {
+                width: 100%;
+            }
+
+            .recetas-toolbar-acciones .btn-add {
+                flex-grow: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('profesional.dashboard_profesional') }}">SALUDME</a>        <ul class="nav-links">
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.dashboard_profesional' %}active{% endif %}" aria-current="page" href="{{ url_for('profesional.dashboard_profesional') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.gestion_pacientes' %}active{% endif %}" href="{{ url_for('profesional.gestion_pacientes') }}">Gestión De Pacientes</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.agenda' %}active{% endif %}" href="{{ url_for('profesional.agenda') }}">Agenda</a>
+                    <i class="fa-solid fa-calendar-days"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'profesional.gestion_recetas' %}active{% endif %}" href="{{ url_for('profesional.gestion_recetas') }}">Recetas</a>
+                <i class="fa-solid fa-book-open"></i>
+            </li>
+            <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'profesional.cuenta' %}active{% endif %}" href="{{ url_for('profesional.cuenta') }}">Cuenta</a>
+                    <i class="fa-solid fa-user-tie"></i>
+                </a>
+            </li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+<div class="content-card">
+
+    {# Mensajes flash de Flask #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {# ----- Toolbar: título + contador | buscador + crear ----- #}
+    <div class="recetas-toolbar">
+        <div class="recetas-toolbar-titulo">
+            <h1><i class="fa-solid fa-book-open"></i> Gestión de Recetas</h1>
+            <span class="badge-contador" id="contadorRecetas">
+                {{ recetas|length }} receta{{ 's' if recetas|length != 1 else '' }}
+            </span>
+        </div>
+
+        <div class="recetas-toolbar-acciones">
+            <div class="input-group recetas-buscador">
+                <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="search" id="buscarReceta" class="form-control"
+                       placeholder="Buscar por nombre, descripción o categoría..." aria-label="Buscar receta">
+            </div>
+            <button type="button" class="btn btn-add" data-bs-toggle="modal"
+                    data-bs-target="#recetaModal" onclick="resetForm('recetaForm')">
+                <i class="fa-solid fa-plus"></i> Añadir Nueva Receta
+            </button>
+        </div>
+    </div>
+
+    {# ----- Listado en tarjetas (responsivo con Bootstrap) ----- #}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" id="gridRecetas">
+        {% for receta in recetas %}
+        <div class="col receta-item">
+            <div class="card h-100 shadow-sm receta-card">
+                <div class="receta-card-media">
+                    <img src="{{ url_for('static', filename=receta.foto) if receta.foto else url_for('static', filename='img/recipes/default_recipe.png') }}"
+                         class="card-img-top" alt="{{ receta.nombre }}">
+                    {% if receta.categoria %}
+                        <span class="receta-card-categoria">{{ receta.categoria }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <h5 class="card-title">{{ receta.nombre }}</h5>
+                        <span class="badge badge-ing text-nowrap flex-shrink-0">
+                            {{ receta.cant_ingredientes if receta.cant_ingredientes else 0 }} ing.
+                        </span>
+                    </div>
+
+                    <p class="card-text receta-card-desc">
+                        {{ receta.descripcion if receta.descripcion else 'Sin descripción.' }}
+                    </p>
+
+                    <div class="receta-card-info">
+                        {% if receta.categoria %}
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                <i class="fa-solid fa-tag"></i> {{ receta.categoria }}
+                            </span>
+                        {% endif %}
+                        {% if receta.instrucciones %}
+                            <span class="badge badge-prep-si"><i class="fa-solid fa-fire-burner"></i> Con preparación</span>
+                        {% else %}
+                            <span class="badge badge-prep-no"><i class="fa-solid fa-fire-burner"></i> Sin preparación</span>
+                        {% endif %}
+                    </div>
+
+                    {% if receta.instrucciones %}
+                        <div class="receta-card-prep">
+                            <strong><i class="fa-solid fa-list-ol"></i> Preparación</strong>
+                            {{ receta.instrucciones }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Acciones de la tarjeta: editar / eliminar #}
+                <div class="receta-card-footer">
+                    <button type="button" class="btn btn-sm btn-editar"
+                            data-bs-toggle="modal" data-bs-target="#recetaModal"
+                            data-id="{{ receta.id_recetas }}" title="Editar receta">
+                        <i class="fa-solid fa-pen-to-square"></i> Editar
+                    </button>
+                    <form action="{{ url_for('profesional.eliminar_receta', id=receta.id_recetas) }}"
+                          method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-eliminar"
+                                title="Eliminar receta"
+                                onclick="return confirm('¿Estás seguro de que quieres eliminar esta receta? También se eliminarán sus asignaciones a pacientes.');">
+                            <i class="fa-solid fa-trash"></i> Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-light border text-center py-5">
+                <i class="fa-solid fa-bowl-food fa-2x d-block mb-3" style="color: var(--verde);"></i>
+                <h5>No hay recetas registradas todavía.</h5>
+                <p class="text-muted mb-3">Pulsa "Añadir Nueva Receta" para crear la primera.</p>
+                <button type="button" class="btn btn-add" data-bs-toggle="modal"
+                        data-bs-target="#recetaModal" onclick="resetForm('recetaForm')">
+                    <i class="fa-solid fa-plus"></i> Añadir Nueva Receta
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {# Mensaje cuando el buscador no encuentra nada #}
+    <div id="sinResultados" class="alert alert-info text-center d-none">
+        <i class="fa-solid fa-magnifying-glass"></i> No hay recetas que coincidan con la búsqueda.
+    </div>
+</div>
+
+{# ----- Modal único: formulario Añadir / Editar receta ----- #}
+<div class="modal fade" id="recetaModal" tabindex="-1" aria-labelledby="recetaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recetaModalLabel">Añadir/Editar Receta</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form id="recetaForm" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="recetaId" name="id_recetas">
+                <div class="modal-body">
+                    <div class="row g-3">
+
+                        {# Datos generales #}
+                        <div class="form-section-title"><i class="fa-solid fa-circle-info"></i> Datos generales</div>
+
+                        <div class="col-12 col-md-8">
+                            <label for="nombreReceta" class="form-label">Nombre *</label>
+                            <input type="text" class="form-control" id="nombreReceta" name="nombre"
+                                   placeholder="Ej. Ensalada de Quinoa y Pollo" required>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label for="categoriaReceta" class="form-label">Categoría *</label>
+                            <select class="form-select" id="categoriaReceta" name="categoria" required>
+                                <option value="">Selecciona...</option>
+                                <option value="Ensaladas y Bowls">Ensaladas y Bowls</option>
+                                <option value="Pizzas">Pizzas</option>
+                                <option value="Postres">Postres</option>
+                                <option value="Arroz">Arroz</option>
+                                <option value="Sopas">Sopas</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="descripcionReceta" class="form-label">Descripción *</label>
+                            <textarea class="form-control" id="descripcionReceta" name="descripcion" rows="2"
+                                      placeholder="Breve descripción de la receta..." required></textarea>
+                        </div>
+
+                        {# Preparación e ingredientes lado a lado #}
+                        <div class="form-section-title"><i class="fa-solid fa-utensils"></i> Ingredientes y preparación</div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="ingredientesReceta" class="form-label">Ingredientes *</label>
+                            <textarea class="form-control" id="ingredientesReceta" name="ingredientes" rows="5"
+                                      placeholder="Sal, Pimienta, Aceite de oliva..." required></textarea>
+                            <small class="form-text text-muted">Sepáralos con comas. Se cuentan automáticamente.</small>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="instruccionesReceta" class="form-label">Preparación (pasos)</label>
+                            <textarea class="form-control" id="instruccionesReceta" name="instrucciones" rows="5"
+                                      placeholder="Paso 1: ...&#10;Paso 2: ..."></textarea>
+                            <small class="form-text text-muted">Se muestra en la ficha de detalle del paciente.</small>
+                        </div>
+
+                        {# Foto #}
+                        <div class="form-section-title"><i class="fa-solid fa-camera"></i> Imagen</div>
+
+                        <div class="col-12">
+                            <label for="fotoReceta" class="form-label">Foto (solo .png, .jpg, .jpeg, .gif)</label>
+                            <input type="file" class="form-control" id="fotoReceta" name="foto"
+                                   accept=".png, .jpg, .jpeg, .gif">
+                            <div id="currentFotoRecetaPreview" class="mt-2 d-none">
+                                <small class="text-muted d-block mb-1">Foto actual:</small>
+                                <img id="recetaFotoPreview" src="" alt="Foto actual" class="rounded"
+                                     style="max-height: 110px;">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-add"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ----- Modal: modo añadir / editar (precarga vía API existente) -----
+    document.addEventListener('DOMContentLoaded', function() {
+        const recetaModal = document.getElementById('recetaModal');
+        recetaModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const recetaId = button && button.getAttribute('data-id');
+            const form = document.getElementById('recetaForm');
+            const modalLabel = document.getElementById('recetaModalLabel');
+            const previewDiv = document.getElementById('currentFotoRecetaPreview');
+            const previewImg = document.getElementById('recetaFotoPreview');
+
+            document.getElementById('fotoReceta').value = '';
+
+            if (recetaId) {
+                // Modo edición
+                modalLabel.textContent = 'Editar Receta';
+                form.action = "{{ url_for('profesional.editar_receta', id=0) }}".replace('0', recetaId);
+
+                fetch(`/profesional/api/obtener_receta/${recetaId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('recetaId').value = data.id_recetas;
+                        document.getElementById('nombreReceta').value = data.nombre;
+                        document.getElementById('descripcionReceta').value = data.descripcion;
+                        document.getElementById('ingredientesReceta').value = data.ingredientes;
+                        document.getElementById('instruccionesReceta').value = data.instrucciones || '';
+                        document.getElementById('categoriaReceta').value = data.categoria || '';
+
+                        if (data.foto && data.foto !== 'img/recipes/default_recipe.png') {
+                            previewImg.src = "{{ url_for('static', filename='') }}" + data.foto;
+                            previewDiv.classList.remove('d-none');
+                        } else {
+                            previewDiv.classList.add('d-none');
+                            previewImg.src = '';
+                        }
+                    })
+                    .catch(error => console.error('Error al cargar la receta:', error));
+            } else {
+                // Modo añadir
+                modalLabel.textContent = 'Añadir Nueva Receta';
+                form.action = "{{ url_for('profesional.agregar_receta') }}";
+                resetForm('recetaForm');
+                previewDiv.classList.add('d-none');
+                previewImg.src = '';
+            }
+        });
+
+        // ----- Buscador del listado (nombre, descripción o categoría) -----
+        const buscador = document.getElementById('buscarReceta');
+        const items = document.querySelectorAll('.receta-item');
+        const sinResultados = document.getElementById('sinResultados');
+        const contador = document.getElementById('contadorRecetas');
+        const totalInicial = items.length;
+
+        buscador.addEventListener('input', function () {
+            const q = this.value.toLowerCase().trim();
+            let visibles = 0;
+
+            items.forEach(function (item) {
+                const coincide = !q || item.textContent.toLowerCase().includes(q);
+                item.classList.toggle('d-none', !coincide);
+                if (coincide) visibles++;
+            });
+
+            sinResultados.classList.toggle('d-none', visibles > 0 || q === '');
+            contador.textContent = q
+                ? visibles + ' de ' + totalInicial + ' recetas'
+                : totalInicial + ' receta' + (totalInicial !== 1 ? 's' : '');
+        });
+    });
+
+    function resetForm(formId) {
+        const form = document.getElementById(formId);
+        form.reset();
+        document.getElementById('recetaId').value = '';
+        document.getElementById('categoriaReceta').value = '';
+        document.getElementById('fotoReceta').value = '';
+        document.getElementById('instruccionesReceta').value = '';
+    }
+</script>
+</body>
+</html>

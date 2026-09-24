@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Informacion1.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Nutricionista.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-title">SALUDME</div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#inicio" class="nav-link">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-separator">|</span>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link dropdown-toggle">Temas</a>
+                    <div class="dropdown-menu">
+                        <a href="#sobrepeso" class="dropdown-item">Sobrepeso</a>
+                        <a href="#Alimentos" class="dropdown-item">Alimentos</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-separator">|</span>
+                </li>
+                <li class="nav-item">
+                    <a href="#nutricionistas" class="nav-link">Nutricionistas</a>
+                </li>
+                 <li class="nav-item">
+                    <span class="nav-separator">|</span>
+                </li>
+                <li class="nav-item">
+                    <a href="#calculadora" class="nav-link">Calculadora</a>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-separator">|</span>
+                </li>
+                <li class="nav-item">
+                    <a href="#contacto" class="nav-link">Contactos</a>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-separator">|</span>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('auth.login') }}" class="nav-link">Iniciar sesión</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <script>
+        // Para hacer el menú desplegable funcional en móviles
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            if (window.innerWidth <= 768) {
+                navItems.forEach(item => {
+                    const link = item.querySelector('.nav-link');
+                    const dropdown = item.querySelector('.dropdown-menu');
+                    
+                    if (dropdown) {
+                        link.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            item.classList.toggle('active');
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+
+
+<div class="panels" id="inicio">
+    <div class="panel panel1">
+      <p>COME </p>
+      <p>VIVE</p>
+      <p>FLORECE</p>
+    </div>
+    <div class="panel panel2">
+      <p>BOCA </p>
+      <p>SABOR </p>
+      <p>GRATITUD</p>
+    </div>
+    <div class="panel panel3">
+      <p>VERDE</p>
+      <p>NUTRE</p>
+      <p>PROTEGE</p>
+    </div>
+    <div class="panel panel4">
+      <p>SEMILLA  </p>
+      <p>CRECE </p>
+      <p>ALIMENTA</p>
+    </div>
+    <div class="panel panel5">
+      <p>AGUA  </p>
+      <p>SANA </p>
+      <p>RENACE</p>
+    </div>
+  </div>
+
+<script>
+    const panels = document.querySelectorAll(".panel");
+
+function panelOpen() {
+  this.classList.toggle('open');
+}
+
+function toggleActive(e) {
+  console.log(e.propertyName)
+  if (e.propertyName.includes('flex')) {
+    this.classList.toggle('open-active');
+  }
+}
+
+panels.forEach(panel => panel.addEventListener('click', panelOpen));
+
+panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <section class="overweight-section" id="sobrepeso">
+        <div class="container">
+            <h2 class="section-title">Sobrepeso y Obesidad</h2>
+            <div class="overweight-content">
+                <div class="overweight-card">
+                    <h3><i class="fas fa-info-circle"></i> ¿Qué es el Sobrepeso?</h3>
+                    <p>El sobrepeso y la obesidad son acumulaciones anormales o excesivas de grasa que pueden ser perjudiciales para la salud. Se miden generalmente a través del <strong>Índice de Masa Corporal (IMC)</strong>, que relaciona el peso con la altura de una persona.</p>
+                    <p>Un IMC entre 25 y 29.9 indica sobrepeso, mientras que un IMC de 30 o superior se considera obesidad.</p>
+                </div>
+                <div class="overweight-card">
+                    <h3><i class="fas fa-frown"></i> Riesgos para la Salud</h3>
+                    <p>El sobrepeso y la obesidad aumentan el riesgo de desarrollar una serie de problemas de salud graves, incluyendo:</p>
+                    <ul>
+                        <li><i class="fas fa-heartbeat"></i> Enfermedades cardíacas y accidentes cerebrovasculares</li>
+                        <li><i class="fas fa-tint"></i> Diabetes tipo 2</li>
+                        <li><i class="fas fa-bone"></i> Problemas articulares y óseos (como osteoartritis)</li>
+                        <li><i class="fas fa-bed"></i> Apnea del sueño</li>
+                        <li><i class="fas fa-cancer"></i> Ciertos tipos de cáncer</li>
+                        <li><i class="fas fa-lungs"></i> Problemas respiratorios</li>
+                    </ul>
+                </div>
+                <div class="overweight-card">
+                    <h3><i class="fas fa-lightbulb"></i> ¿Cómo Prevenirlo?</h3>
+                    <p>Adoptar un estilo de vida saludable es clave para prevenir y manejar el sobrepeso:</p>
+                    <ul>
+                        <li><i class="fas fa-apple-alt"></i> <strong>Dieta equilibrada:</strong> Prioriza frutas, verduras y proteínas. Limita azúcares, grasas y alimentos procesados.</li>
+                        <li><i class="fas fa-running"></i> <strong>Actividad física regular:</strong> Intenta realizar al menos 150 minutos de ejercicio moderado a la semana.</li>
+                        <li><i class="fas fa-water"></i> <strong>Hidratación adecuada:</strong> Bebe suficiente agua a lo largo del día.</li>
+                        <li><i class="fas fa-moon"></i> <strong>Sueño de calidad:</strong> Un buen descanso es fundamental para el metabolismo.</li>
+                        <li><i class="fas fa-handshake"></i> <strong>Apoyo profesional:</strong> Si necesitas ayuda, consulta a un nutricionista o médico.</li>
+                    </ul>
+                </div>
+            </div>
+            <a href="#nutricionistas" class="overweight-cta">Encuentra tu nutricionista aquí</a>
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <section class="features">
+        <div class="container">
+            <div class="feature-card">
+                <i class="fas fa-apple-alt"></i>
+                <h3>Alimentos</h3>
+                <p>Conoce el valor nutricional de cada alimento y cómo incorporarlo en tu dieta.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-utensils"></i>
+                <h3 id="recetas">Recetas Saludables</h3>
+                <p>Descubre deliciosas recetas balanceadas para cada ocasión.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-calculator"></i>
+                <h3>Calculadora</h3>
+                <p>Calcula tus necesidades calóricas y de macronutrientes.</p>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+    <section class="food-groups" id="Alimentos">
+        <div class="container">
+            <h2 class="section-title">Grupos de Alimentos</h2>
+            <div class="food-grid">
+                <div class="food-card">
+                    <img src="{{ url_for('static', filename='/Fruta.jpg') }}" alt="Frutas">
+                    <div class="food-info">
+                        <h3>Frutas</h3>
+                        <p>Fuente natural de vitaminas, minerales y fibra. Consume 2-3 porciones diarias.</p>
+
+                    </div>
+                </div>
+                <div class="food-card">
+                    <img src="{{ url_for('static', filename='/Verduras.jpg') }}" alt="Verduras">
+                    <div class="food-info">
+                        <h3>Verduras</h3>
+                        <p>Esenciales para una dieta balanceada. Incluye variedad de colores en tu plato.</p>
+
+                    </div>
+                </div>
+                <div class="food-card">
+                    <img src="{{ url_for('static', filename='/Proteinas.jpg') }}" alt="Proteínas">
+                    <div class="food-info">
+                        <h3>Proteínas</h3>
+                        <p>Carnes, pescados, legumbres y huevos. Fundamentales para músculos y tejidos.</p>
+
+                    </div>
+                </div>
+                <div class="food-card">
+                    <img src="{{ url_for('static', filename='/Cereales.jpg') }}" alt="Cereales">
+                    <div class="food-info">
+                        <h3>Cereales</h3>
+                        <p>Prefiere los integrales. Proporcionan energía de liberación prolongada.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+	<section  class="section"></section>
+     <div class="container">
+    <h2 class="section-title">Nuestros Servicios</h2>
+		<div class="services">
+			<div class="service-card">
+				<img src="{{ url_for('static', filename='/Plan.jpg') }}" alt="Plan nutricional personalizado" class="service-card__img">
+				<div class="service-card__content">
+					<h3 class="service-card__title">Plan Nutricional Personalizado</h3>
+					<p>Diseñamos un plan de alimentación adaptado a tus necesidades, preferencias y objetivos de salud.</p>
+				</div>
+			</div>
+			
+			<div class="service-card">
+				<img src="{{ url_for('static', filename='/Control.jpg') }}" alt="Control de peso" class="service-card__img">
+				<div class="service-card__content">
+					<h3 class="service-card__title">Control de Peso</h3>
+					<p>Programas efectivos para pérdida o aumento de peso de forma saludable y sostenible.</p>
+				</div>
+			</div>
+			
+			<div class="service-card">
+				<img src="{{ url_for('static', filename='/NutricionDeportiva.jpg') }}" alt="Nutrición deportiva" class="service-card__img">
+				<div class="service-card__content">
+					<h3 class="service-card__title">Nutrición Deportiva</h3>
+					<p>Optimiza tu rendimiento físico con planes nutricionales específicos para tu disciplina deportiva.</p>
+				</div>
+			</div>
+		</div>
+     </div>
+	</section>
+
+
+
+
+
+       <div class="container">
+<section id="nutricionistas">
+<section id="team-section">
+  
+    <h1 class="about-title">TEAM</h1>
+
+    <div class="carousel-container">
+        <button class="nav-arrow left">‹</button>
+        <div class="carousel-track">
+            <div class="card" data-index="0">
+                <img src="{{ url_for('static', filename='/doc1.jpg') }}" alt="Team Member 1">
+            </div>
+            <div class="card" data-index="1">
+                <img src="{{ url_for('static', filename='doc2.jpg') }}" alt="Team Member 2">
+            </div>
+            <div class="card" data-index="2">
+                <img src="{{ url_for('static', filename='/doc3.jpg') }}" alt="Team Member 3">
+            </div>
+        </div>
+        <button class="nav-arrow right">›</button>
+    </div>
+
+    <div class="member-info">
+        <h2 class="member-name">David Kim</h2>
+        <p class="member-role">Founder</p>
+    </div>
+
+    <div class="dots">
+        <div class="dot active" data-index="0"></div>
+        <div class="dot" data-index="1"></div>
+        <div class="dot" data-index="2"></div>
+    </div>
+</section>
+</section>
+</div>
+
+
+<script>
+const teamMembers = [
+    { name: "Ana Martinez", role: "Doctora" },
+    { name: "Pablo Torres", role: "Doctor" },
+    { name: "Carolina Lopez", role: "Doctora" },
+    { name: "Julia Gimmel", role: "UX Designer" },
+    { name: "Lisa Anderson", role: "Marketing Manager" },
+    { name: "James Wilson", role: "Product Manager" }
+];
+
+const cards = document.querySelectorAll(".card");
+const dots = document.querySelectorAll(".dot");
+const memberName = document.querySelector(".member-name");
+const memberRole = document.querySelector(".member-role");
+const leftArrow = document.querySelector(".nav-arrow.left");
+const rightArrow = document.querySelector(".nav-arrow.right");
+let currentIndex = 0;
+let isAnimating = false;
+
+function updateCarousel(newIndex) {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    currentIndex = (newIndex + cards.length) % cards.length;
+
+    cards.forEach((card, i) => {
+        const offset = (i - currentIndex + cards.length) % cards.length;
+
+        card.classList.remove(
+            "center",
+            "left-1",
+            "left-2",
+            "right-1",
+            "right-2",
+            "hidden"
+        );
+
+        if (offset === 0) {
+            card.classList.add("center");
+        } else if (offset === 1) {
+            card.classList.add("right-1");
+        } else if (offset === 2) {
+            card.classList.add("left-1");
+        } else {
+            card.classList.add("hidden");
+        }
+    });
+
+    dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === currentIndex);
+    });
+
+    memberName.style.opacity = "0";
+    memberRole.style.opacity = "0";
+
+    setTimeout(() => {
+        memberName.textContent = teamMembers[currentIndex].name;
+        memberRole.textContent = teamMembers[currentIndex].role;
+        memberName.style.opacity = "1";
+        memberRole.style.opacity = "1";
+    }, 300);
+
+    setTimeout(() => {
+        isAnimating = false;
+    }, 800);
+}
+
+leftArrow.addEventListener("click", () => {
+    updateCarousel(currentIndex - 1);
+});
+
+rightArrow.addEventListener("click", () => {
+    updateCarousel(currentIndex + 1);
+});
+
+dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+        updateCarousel(i);
+    });
+});
+
+cards.forEach((card, i) => {
+    card.addEventListener("click", () => {
+        updateCarousel(i);
+    });
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") {
+        updateCarousel(currentIndex - 1);
+    } else if (e.key === "ArrowRight") {
+        updateCarousel(currentIndex + 1);
+    }
+});
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            updateCarousel(currentIndex + 1);
+        } else {
+            updateCarousel(currentIndex - 1);
+        }
+    }
+}
+
+updateCarousel(0);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/calculadora.css') }}">
+<div class="container">
+<div class="imc-calculator" id="calculadora">
+    <h2 class="section-title">Calculadora de IMC</h2>
+    <div class="calculator-container">
+        <div class="calculator-info">
+            <h3>¿Qué es el Índice de Masa Corporal?</h3>
+            <p>El IMC es una medida que relaciona tu peso con tu altura. Es un indicador útil para evaluar si tu peso está dentro de un rango saludable.</p>
+            <div class="imc-scale">
+                <div class="scale-item underweight">
+                    <span>&lt; 18.5</span>
+                    <p>Bajo peso</p>
+                </div>
+                <div class="scale-item normal">
+                    <span>18.5 - 24.9</span>
+                    <p>Peso normal</p>
+                </div>
+                <div class="scale-item overweight">
+                    <span>25 - 29.9</span>
+                    <p>Sobrepeso</p>
+                </div>
+                <div class="scale-item obese">
+                    <span>≥ 30</span>
+                    <p>Obesidad</p>
+                </div>
+            </div>
+        </div>
+        <div class="calculator-form">
+            <form id="imc-form">
+                <div class="form-group">
+                    <label for="imc-weight">Peso (kg):</label>
+                    <input type="number" id="imc-weight" min="30" max="300" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="imc-height">Altura (cm):</label>
+                    <input type="number"  placeholder="Ej: 175" id="imc-height" min="100"  max="250" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-calculate">Calcular IMC</button>
+                    <button type="button" id="clear-btn" class="btn btn-clear">Borrar</button>
+                </div>
+            </form>
+            <div id="imc-result" class="result-container">
+                <h3>Tu resultado:</h3>
+                <div class="result-value">
+                    <span id="imc-value">0</span>
+                    <span id="imc-category" class="category-normal">Peso normal</span>
+                </div>
+                <div id="imc-explanation" class="result-explanation">
+                    <p id="imc-message">Tu peso está dentro del rango considerado normal para tu altura.</p>
+                    <div id="imc-recommendations" class="recommendations">
+                        <h4>Recomendaciones:</h4>
+                        <ul>
+                            <li>Mantén una dieta balanceada</li>
+                            <li>Realiza actividad física regular</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script>
+    document.getElementById('imc-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        calculateIMC();
+    });
+
+    document.getElementById('clear-btn').addEventListener('click', function() {
+        clearResults();
+    });
+
+    function calculateIMC() {
+        // Obtener valores
+        const weight = parseFloat(document.getElementById('imc-weight').value);
+        const height = parseFloat(document.getElementById('imc-height').value) / 100; // Convertir a metros
+        
+        // Calcular IMC
+        const imc = weight / (height * height);
+        const roundedImc = Math.round(imc * 10) / 10;
+        
+        // Determinar categoría
+        let category, message, recommendations;
+        let categoryClass = 'category-normal';
+        
+        if (imc < 18.5) {
+            category = 'Bajo peso';
+            categoryClass = 'category-bajopeso';
+            message = 'Tu IMC indica que estás por debajo del peso considerado saludable para tu altura.';
+            recommendations = [
+                'Consulta con un nutricionista para un plan de aumento de peso saludable',
+                'Incluye alimentos ricos en nutrientes y calorías saludables',
+                'Realiza entrenamiento de fuerza para ganar masa muscular',
+                'Controla tu progreso regularmente'
+            ];
+        } else if (imc >= 18.5 && imc < 25) {
+            category = 'Peso normal';
+            categoryClass = 'category-normal';
+            message = '¡Felicidades! Tu peso está dentro del rango considerado saludable para tu altura.';
+            recommendations = [
+                'Mantén una dieta balanceada y variada',
+                'Realiza al menos 150 minutos de actividad física moderada por semana',
+                'Controla tu peso periódicamente para mantenerte en este rango',
+                'Prioriza alimentos naturales y reduce los ultraprocesados'
+            ];
+        } else if (imc >= 25 && imc < 30) {
+            category = 'Sobrepeso';
+            categoryClass = 'category-sobrepeso';
+            message = 'Tu IMC indica que tienes sobrepeso. Un ligero ajuste en tus hábitos podría ayudarte.';
+            recommendations = [
+                'Incorpora más frutas y verduras a tu dieta',
+                'Aumenta tu actividad física gradualmente',
+                'Reduce el consumo de alimentos altos en azúcares y grasas saturadas',
+                'Consulta con un profesional para un plan personalizado'
+            ];
+        } else {
+            category = 'Obesidad';
+            categoryClass = 'category-obesidad';
+            message = 'Tu IMC indica obesidad. Es recomendable buscar asesoramiento profesional.';
+            recommendations = [
+                'Consulta con un médico y nutricionista para evaluación',
+                'Establece metas realistas de pérdida de peso',
+                'Incorpora actividad física adaptada a tus capacidades',
+                'Enfócate en cambios de hábitos a largo plazo'
+            ];
+        }
+        
+        // Mostrar resultados
+        document.getElementById('imc-value').textContent = roundedImc;
+        document.getElementById('imc-category').textContent = category;
+        document.getElementById('imc-category').className = categoryClass;
+        document.getElementById('imc-message').textContent = message;
+        
+        const recommendationsList = document.getElementById('imc-recommendations').querySelector('ul');
+        recommendationsList.innerHTML = '';
+        recommendations.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            recommendationsList.appendChild(li);
+        });
+        
+        document.getElementById('imc-result').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('imc-result').classList.add('show');
+        }, 10);
+        
+        // Desplazarse a los resultados
+        document.getElementById('imc-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function clearResults() {
+        // Limpiar formulario
+        document.getElementById('imc-form').reset();
+        
+        // Ocultar resultados con animación
+        document.getElementById('imc-result').classList.remove('show');
+        setTimeout(() => {
+            document.getElementById('imc-result').style.display = 'none';
+        }, 500);
+        
+        // Restablecer valores por defecto
+        document.getElementById('imc-value').textContent = '0';
+        document.getElementById('imc-category').textContent = 'Peso normal';
+        document.getElementById('imc-category').className = 'category-normal';
+        document.getElementById('imc-message').textContent = 'Tu peso está dentro del rango considerado normal para tu altura.';
+        
+        const recommendationsList = document.getElementById('imc-recommendations').querySelector('ul');
+        recommendationsList.innerHTML = '';
+        const defaultRecommendations = [
+            'Mantén una dieta balanceada',
+            'Realiza actividad física regular'
+        ];
+        defaultRecommendations.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            recommendationsList.appendChild(li);
+        });
+    }
+</script>
+
+
+
+
+	<section class="section cta">
+		<h2 class="section__title cta__title">¿Listo para cambiar tus hábitos?</h2>
+		<p>Agenda una consulta inicial gratuita con uno de nuestros nutricionistas.</p>
+		<a href="{{ url_for('auth.login') }}" class="btn1">Agendar Consulta</a>
+	</section>
+
+
+    <footer class="footer" id="contacto">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>SALUDME</h3>
+                    <p>Información nutricional confiable y accesible para todos.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Enlaces útiles</h3>
+                    <ul>
+                        <li>Preguntas frecuentes</li>
+                        <li>Blog de nutrición</li>
+                        <li>Guías descargables</li>
+                        <li>Planes de alimentación</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contacto</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Calle Salud 123, Ciudad</li>
+                        <li><i class="fas fa-phone"></i> +123 456 789</li>
+                        <li><i class="fas fa-envelope"></i> info@SALUDME.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SALUDME. Todos los derechos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Política de privacidad</a>
+                    <a href="#">Términos de servicio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

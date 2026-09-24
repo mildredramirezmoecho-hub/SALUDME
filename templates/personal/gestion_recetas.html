@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Recetas - SaludMe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde-oscuro: #2e7d32;
+            --verde: #56946df1;
+            --verde-claro: #c8e6c9;
+            --blanco: #ffffff;
+            --gris-claro: #f1f1f1;
+            --gris-medio: #888888;
+            --sombra: rgba(0, 0, 0, 0.05);
+            --negro: #212121;
+            --import: #f5f4f4;
+            --text-color: #333;
+            --white-color: #fff;
+            --secondary-color: #f4e2dc;
+        }
+
+        body {
+            background-color: var(--gris-claro);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 100px; /* Espacio para el navbar fijo */
+        }
+
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 1.15rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #f0f0f0;
+            font-weight: 700;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: #f0f0f0;
+        }
+
+        .nav-links a.active {
+            color: #212121;
+            font-weight: 900;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item i {
+            margin-right: 0.5rem;
+            text-decoration: none;
+        }
+
+        .main-content {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto 20px auto;
+            padding: 30px;
+            background-color: var(--blanco);
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: var(--verde-oscuro);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .table thead th {
+            background-color: var(--verde);
+            color: var(--blanco);
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table tbody tr {
+            background-color: var(--import);
+            transition: background-color 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--verde-claro);
+        }
+
+        .table tbody td {
+            vertical-align: middle;
+            text-align: center;
+            color: var(--negro);
+        }
+
+        .btn-add {
+            background-color: var(--verde-oscuro);
+            border-color: var(--verde-oscuro);
+        }
+        .btn-add:hover {
+            background-color: #256a29;
+            border-color: #256a29;
+        }
+
+        .btn-edit {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .btn-edit:hover {
+            background-color: #0b5ed7;
+            border-color: #0b5ed7;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+            border-color: #c82333;
+        }
+
+        .modal-content {
+            border-radius: 1rem;
+        }
+        .modal-header {
+            background-color: var(--verde);
+            color: var(--blanco);
+        }
+        .modal-footer .btn {
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('personal.dashboard_personal') }}">SALUDME</a>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('personal.dashboard_personal') }}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-utensils"></i>
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('personal.gestion_recetas') }}">Recetas</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-box"></i>
+                    <a class="nav-link" href="{{ url_for('personal.gestion_productos') }}">Productos</a>
+                </li>
+                <li class="nav-item">
+                    <i class="fa-solid fa-users"></i>
+                    <a class="nav-link" href="{{ url_for('personal.gestion_usuarios') }}">Usuarios</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST">
+                <button class="btn btn-outline-success btn-logout" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+<div class="main-content">
+    <h1>Gestión de Recetas</h1>
+
+    {# Bloque para mostrar mensajes flash #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flashes mb-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <button type="button" class="btn btn-add mb-3" data-bs-toggle="modal" data-bs-target="#recetaModal" onclick="resetForm('recetaForm')">
+        Añadir Nueva Receta
+    </button>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Ingredientes</th>
+                <th>Categoría</th> 
+                <th>Foto</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for receta in recetas %}
+            <tr>
+                <td>{{ receta.id_recetas }}</td> 
+                <td>{{ receta.nombre }}</td>
+                <td>{{ receta.descripcion }}</td>
+                <td>{{ receta.ingredientes }}</td>
+                <td>{{ receta.categoria if receta.categoria else 'N/A' }}</td> 
+                <td>
+                    {# Muestra la imagen usando la ruta relativa almacenada #}
+                    <img src="{{ url_for('static', filename=receta.foto) if receta.foto else url_for('static', filename='img/recipes/default_recipe.png') }}" alt="{{ receta.nombre }}" width="50">
+                </td>
+                <td>
+                    <button type="button" class="btn btn-edit btn-sm" data-bs-toggle="modal" data-bs-target="#recetaModal" data-id="{{ receta.id_recetas }}">
+                        Editar
+                    </button>
+                    <form action="{{ url_for('personal.eliminar_receta', id=receta.id_recetas) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-delete btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar esta receta?');">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="recetaModal" tabindex="-1" aria-labelledby="recetaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recetaModalLabel">Añadir/Editar Receta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form id="recetaForm" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="recetaId" name="id_recetas">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreReceta" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreReceta" name="nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcionReceta" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcionReceta" name="descripcion" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ingredientesReceta" class="form-label">Ingredientes</label>
+                        <textarea class="form-control" id="ingredientesReceta" name="ingredientes" rows="5" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="instruccionesReceta" class="form-label">Preparación (pasos)</label>
+                        <textarea class="form-control" id="instruccionesReceta" name="instrucciones" rows="5" placeholder="Describe los pasos de preparación de la receta..."></textarea>
+                        <small class="form-text text-muted">Opcional. Se mostrará en las tarjetas de recetas del paciente.</small>
+                    </div>
+                    {# ¡CAMBIO: Usando <select> para la Categoría con opciones fijas! #}
+                    <div class="mb-3">
+                        <label for="categoriaReceta" class="form-label">Categoría</label>
+                        <select class="form-control" id="categoriaReceta" name="categoria">
+                            <option value="">Selecciona una categoría</option>
+                            <option value="Ensaladas y Bowls">Ensaladas y Bowls</option>
+                            <option value="Pizzas">Pizzas</option>
+                            <option value="Postres">Postres</option>
+                            <option value="Arroz">Arroz</option>
+                            <option value="Sopas">Sopas</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fotoReceta" class="form-label">Foto (solo archivos .png, .jpg, .jpeg, .gif)</label>
+                        <input type="file" class="form-control" id="fotoReceta" name="foto" accept=".png, .jpg, .jpeg, .gif">
+                        <small class="form-text text-muted">Selecciona una nueva foto para cambiar la actual.</small>
+                        <div id="currentFotoRecetaPreview" class="mt-2" style="display: none;">
+                            <p>Foto actual:</p>
+                            <img id="recetaFotoPreview" src="" alt="Foto actual" width="100">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const recetaModal = document.getElementById('recetaModal');
+        recetaModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const recetaId = button.getAttribute('data-id');
+            const form = document.getElementById('recetaForm');
+            const modalLabel = document.getElementById('recetaModalLabel');
+            const currentFotoPreviewDiv = document.getElementById('currentFotoRecetaPreview');
+            const recetaFotoPreviewImg = document.getElementById('recetaFotoPreview');
+
+            document.getElementById('fotoReceta').value = '';
+
+            if (recetaId) {
+                // Modo edición
+                modalLabel.textContent = 'Editar Receta';
+                form.action = "{{ url_for('personal.editar_receta', id=0) }}".replace('0', recetaId);
+                
+                fetch(`/personal/api/obtener_receta/${recetaId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('recetaId').value = data.id_recetas;
+                        document.getElementById('nombreReceta').value = data.nombre;
+                        document.getElementById('descripcionReceta').value = data.descripcion;
+                        document.getElementById('ingredientesReceta').value = data.ingredientes;
+                        document.getElementById('instruccionesReceta').value = data.instrucciones || '';
+                        
+                        // ¡NUEVO: Seleccionar la opción correcta en el <select> de categoría!
+                        const categoriaSelect = document.getElementById('categoriaReceta');
+                        categoriaSelect.value = data.categoria || ''; 
+                        
+                        if (data.foto && data.foto !== 'img/recipes/default_recipe.png') {
+                            recetaFotoPreviewImg.src = "{{ url_for('static', filename='') }}" + data.foto;
+                            currentFotoPreviewDiv.style.display = 'block';
+                        } else {
+                            currentFotoPreviewDiv.style.display = 'none';
+                            recetaFotoPreviewImg.src = '';
+                        }
+                    })
+                    .catch(error => console.error('Error al cargar la receta:', error));
+            } else {
+                // Modo añadir
+                modalLabel.textContent = 'Añadir Nueva Receta';
+                form.action = "{{ url_for('personal.agregar_receta') }}";
+                resetForm('recetaForm');
+                currentFotoPreviewDiv.style.display = 'none';
+                recetaFotoPreviewImg.src = '';
+            }
+        });
+    });
+
+    function resetForm(formId) {
+        const form = document.getElementById(formId);
+        form.reset();
+        document.getElementById('recetaId').value = '';
+        // Resetear el <select> de categoría a la opción por defecto
+        document.getElementById('categoriaReceta').value = ''; 
+        document.getElementById('fotoReceta').value = '';
+        document.getElementById('instruccionesReceta').value = '';
+    }
+</script>

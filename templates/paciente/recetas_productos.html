@@ -1,0 +1,249 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas y Productos - SaludMe</title>
+    {# CORRECCIÓN IMPORTANTE: Usa url_for para referenciar archivos estáticos #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/recetas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/categoria.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <style>
+
+      body {
+    background-color: #f4e2dc;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--blanco);
+    color: var(--blanco);
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+        
+        .navbar {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background-color: var(--verde) !important;
+            border-radius: 1.5em;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            align-items: end;
+        }
+
+        /* Estilos para la sección de categorías (REVERTED TO USER'S DESIGN, POSITIONING ADJUSTED) */
+        .categorias-section {
+            max-width: 1100px; /* Ancho original del usuario */
+            width: 90%;
+            padding: 80px 20px 40px 40px; /* Padding original del usuario */
+             margin: 120px auto 40px auto; /* Aumentado margen superior a 120px */
+            background: var(--verde); /* Fondo según tu root */
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            text-align: center;
+            max-height: 350px; /* Altura original del usuario */
+            position: relative;
+            top: 80px; /* Eliminado top: 50px para evitar desplazamiento */
+            left: 0; /* Eliminado left: 450px para centrar */
+            z-index: 100;
+        }
+.btn{
+    background-color: var(--blanco);
+    color: var(--verde);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+        
+
+    </style>
+
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #ffffff; font-size: 1.5rem;" href="{{ url_for('paciente.dashboard_paciente') }}">SALUDME</a> {# O podrías enviarlo a la ruta de login si es la página principal del sitio #}
+        <ul class="nav-links">
+            <li class="nav-item">
+                   <a class="nav-link " aria-current="page" href="{{ url_for('paciente.dashboard_paciente') }}">Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('paciente.recetas_productos', filter='recetas') }}">Recetas</a>
+                    <i class="fa-solid fa-bars-progress"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                {# CAMBIO: Enlaza a la lista de consultas del paciente #}
+                <a class="nav-link " href="{{ url_for('paciente.solicitar_cita') }}">Consulta</a> {# Apunta a solicitar cita #}
+            </li>
+            <li class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <a class="nav-link" href="{{ url_for('paciente.mi_progreso') }}">Cuenta</a>
+            </li>
+        </ul>
+            {# CAMBIO: Formulario de búsqueda transformado en botón de Cerrar Sesión #}
+            <form class="d-flex" action="{{ url_for('auth.logout') }}" method="POST"> {# Asumiendo una ruta de logout en 'auth' Blueprint #}
+                <button class="btn btn-outline-success" type="submit">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+<div class="categorias-section mt-5">
+    <h2>Categorías</h2>
+    {% set iconos_categoria = {
+        'Postres': 'fa-cake-candles',
+        'Arroz': 'fa-bowl-food',
+        'Ensaladas y Bowls': 'fa-leaf',
+        'Sopas': 'fa-plate-wheat',
+        'Pizzas': 'fa-pizza-slice'
+    } %}
+    <div class="categorias-grid">
+        {# Filtro "Todas" (quita el filtro de categoría) #}
+        <a href="{{ url_for('paciente.recetas_productos', filter='recetas') }}"
+           class="categoria-item {% if not category_filter %}active{% endif %}">
+            <i class="fa-solid fa-border-all"></i>
+            <h3>Todas</h3>
+        </a>
+        {# Categorías reales de las recetas asignadas al paciente #}
+        {% for cat in categorias %}
+        <a href="{{ url_for('paciente.recetas_productos', category=cat, filter='recetas') }}"
+           class="categoria-item {% if category_filter == cat %}active{% endif %}">
+            <i class="fa-solid {{ iconos_categoria.get(cat, 'fa-utensils') }}"></i>
+            <h3>{{ cat }}</h3>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="products-section">
+  <h2>{{ page_title if page_title else 'Recetas y Productos' }}</h2>
+
+  {# Buscador por nombre de receta (también busca en productos) #}
+  <div class="search">
+    <form class="d-flex" method="GET" action="{{ url_for('paciente.recetas_productos') }}">
+      <input class="form-control" type="search" name="search_query" placeholder="Buscar receta por nombre..." aria-label="Buscar receta por nombre" value="{{ search_query if search_query }}">
+      <input type="hidden" name="filter" value="{{ filter_by }}">
+      <input type="hidden" name="category" value="{{ category_filter }}">
+
+      <div class="filter-dropdown">
+        <button class="btn-search filter-btn" type="button">
+          <i class="fa-solid fa-sort-down"></i> Filtro
+        </button>
+        <div class="dropdown-content">
+          <a href="{{ url_for('paciente.recetas_productos', filter='productos', search_query=search_query, category=category_filter) }}">Producto</a>
+          <a href="{{ url_for('paciente.recetas_productos', filter='recetas', search_query=search_query, category=category_filter) }}">Recetas</a>
+        </div>
+      </div>
+
+      <button class="btn" type="submit">Buscar</button>
+    </form>
+  </div>
+
+  {# Filtros activos + número de resultados #}
+  <div class="receta-toolbar">
+    {% if search_query %}
+      <a class="receta-chip" title="Quitar búsqueda"
+         href="{{ url_for('paciente.recetas_productos', filter=filter_by, category=category_filter) }}">
+        <i class="fa-solid fa-magnifying-glass"></i> "{{ search_query }}" <i class="fa-solid fa-xmark"></i>
+      </a>
+    {% endif %}
+    {% if category_filter %}
+      <a class="receta-chip" title="Quitar categoría"
+         href="{{ url_for('paciente.recetas_productos', filter=filter_by, search_query=search_query) }}">
+        <i class="fa-solid fa-tag"></i> {{ category_filter }} <i class="fa-solid fa-xmark"></i>
+      </a>
+    {% endif %}
+    <span class="receta-contador">{{ items|length }} resultado{{ 's' if items|length != 1 else '' }}</span>
+  </div>
+
+<div class="products-grid" id="productsGrid">
+    {% if items %}
+        {% for item_wrapper in items %}
+            {% set item = item_wrapper.data %} {# Extrae el ítem real #}
+
+            {% if item %} {# Si 'item' NO es None, entonces procede a renderizar #}
+                {% if item_wrapper.type == 'producto' %}
+                    <div class="product-card">
+                        <img src="{{ url_for('static', filename=item.foto) if item.foto else url_for('static', filename='img/products/default_product.png') }}" alt="{{ item.nombre }}">
+                        <div class="product-card-content">
+                            <h3>{{ item.nombre }}</h3>
+                            <p>{{ item.descripcion }}</p>
+                            <p>Precio: ${{ "%.2f"|format(item.precio) }}</p>
+                            <a href="{{ url_for('paciente.ver_producto_detalle', id=item.id_producto) }}" class="btn-view-recipes">Ver Producto</a>
+                        </div>
+                    </div>
+                {% elif item_wrapper.type == 'receta' %}
+                    {% set cant_ing = item.cant_ingredientes if item.cant_ingredientes else (item.ingredientes or '').replace('\n', ',').split(',')|select|list|length %}
+                    <div class="product-card recipe-card">
+                        <div class="recipe-card-media">
+                            <img src="{{ url_for('static', filename=item.foto) if item.foto else url_for('static', filename='img/recipes/default_recipe.png') }}" alt="{{ item.nombre }}">
+                            {% if item.categoria %}
+                                <span class="recipe-badge">{{ item.categoria }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="product-card-content">
+                            <h3>{{ item.nombre }}</h3>
+                            <p class="recipe-desc">{{ item.descripcion }}</p>
+
+                            <ul class="recipe-meta">
+                                <li><i class="fa-solid fa-basket-shopping"></i> {{ cant_ing }} ingrediente{{ 's' if cant_ing != 1 else '' }}</li>
+                                {% if item.categoria %}
+                                    <li><i class="fa-solid fa-tag"></i> {{ item.categoria }}</li>
+                                {% endif %}
+                            </ul>
+
+                            <div class="recipe-block">
+                                <span class="recipe-block-title"><i class="fa-solid fa-leaf"></i> Ingredientes</span>
+                                <p>{{ item.ingredientes if item.ingredientes else 'Sin ingredientes registrados.' }}</p>
+                            </div>
+
+                            <div class="recipe-block">
+                                <span class="recipe-block-title"><i class="fa-solid fa-fire-burner"></i> Preparación</span>
+                                <p>{{ item.instrucciones if item.instrucciones else 'Aún sin preparación registrada.' }}</p>
+                            </div>
+
+                            <a href="{{ url_for('paciente.ver_receta_detalle', id=item.id_recetas) }}" class="btn-view-recipes">Ver Receta</a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+        {% endfor %}
+    {% else %}
+        <div class="receta-empty">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            {% if search_query or category_filter %}
+                No se encontraron resultados{% if search_query %} para "{{ search_query }}"{% endif %}{% if category_filter %} en la categoría "{{ category_filter }}"{% endif %}.
+                <br>
+                <a href="{{ url_for('paciente.recetas_productos', filter=filter_by) }}">Ver todos los resultados</a>
+            {% else %}
+                No hay {{ 'productos' if filter_by == 'productos' else 'recetas' if filter_by == 'recetas' else 'elementos' }} disponibles por ahora.
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>

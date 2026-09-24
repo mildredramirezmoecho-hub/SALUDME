@@ -1,0 +1,183 @@
+
+ /* --- SEARCH BAR STYLES (UPDATED) --- */
+.search {
+    display: flex;
+    justify-content: center; /* Centrado horizontalmente */
+    align-items: center;
+    padding: 10px 10px;
+    margin-top: 40px;
+    margin-bottom: 80px;
+}
+
+.search form {
+    display: flex; /* Ensure it's a flex container */
+    gap: 15px; /* Space between items */
+    width: 100%;
+    max-width: 1000px;
+    background-color: var(--verde);
+    padding: 10px 40px;
+    border-radius: 50px;
+    box-shadow: 0 8px 40px var(--sombra);
+    transition: all 0.3s ease;
+    margin: 0 auto;
+    align-items: center; /* Vertically align items */
+    /* Removed flex-wrap and justify-content: center from here to prevent wrapping and ensure left-to-right flow for these items */
+    flex-wrap: nowrap; /* Prevent wrapping for direct alignment */
+    justify-content: flex-start; /* Align items to the start, input will grow */
+}
+
+.search form:focus-within {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 3px var(--verde-claro);
+}
+
+.search .form-control {
+    flex-grow: 1; /* Allow the input to take up available space */
+    min-width: 200px; /* Give it a reasonable minimum width */
+    border: none;
+    padding: 16px 28px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    background-color: var(--import);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search .form-control:focus {
+    outline: none;
+    background-color: var(--blanco);
+    box-shadow: 0 0 0 2px var(--verde);
+}
+
+.search .form-control::placeholder {
+    color: var(--gris-medio);
+    font-style: italic;
+}
+
+.search .btn-search { /* This is your filter button */
+    background-color: var(--blanco);
+    color: var(--negro);
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    border: none;
+    /* No changes needed here for alignment, flexbox handles it */
+}
+
+.search .btn-search:hover {
+    background-color: var(--verde-claro);
+    color: var(--negro);
+    transform: translateY(-2px);
+}
+
+.search .btn { /* This is your 'Buscar' button */
+    background-color: var(--verde-oscuro);
+    color: var(--blanco);
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    border: none;
+    /* No changes needed here for alignment, flexbox handles it */
+}
+
+.search .btn:hover {
+    background-color: var(--verde);
+    color: var(--blanco);
+    transform: translateY(-2px);
+}
+
+.search .btn-outline-success:active {
+    transform: translateY(0);
+}
+
+/* --- Filter Button and Dropdown (Minor Adjustment) --- */
+.filter-dropdown {
+    position: relative;
+    display: inline-block; /* Ensure it behaves well within flex */
+}
+
+.dropdown-content {
+    /* Keep existing styles, they are mostly fine */
+    top: 60px; /* Adjust if needed based on button height */
+    left: 50%; /* Center the dropdown content relative to its parent (the button) */
+    transform: translateX(-50%); /* Adjust to truly center it */
+    white-space: nowrap; /* Prevent dropdown items from wrapping if text is long */
+}
+
+        /* --- Filter Button and Dropdown (REVERTED TO USER'S DESIGN, POSITIONING ADJUSTED) --- */
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+            /* Eliminado left y top para que se posicione con el flujo normal de flexbox */
+        }
+
+        .filter-btn {
+            background-color: var(--blanco); /* Usando variable --blanco */
+            border: none;
+            color: var(--negro); /* Usando variable --negro */
+            padding: 16px 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px var(--sombra);
+        }
+
+        .filter-btn i {
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        .filter-btn:hover {
+            background-color: var(--verde-claro); /* Usando variable --verde-claro */
+            color: var(--verde-oscuro); /* Usando variable --verde-oscuro */
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px var(--sombra);
+        }
+
+        .filter-btn:active {
+            transform: translateY(0);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--blanco); /* Usando variable --blanco */
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+            border-radius: 15px;
+            overflow: hidden;
+            top: 50px; /* Ajustado para estar debajo del botón */
+            left: 0; /* Alineado al borde izquierdo del contenedor del filtro */
+            transform: translateX(0); /* Eliminado transform para centrado horizontal previo */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown-content a {
+            color: var(--negro); /* Usando variable --negro */
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-size: 1rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--verde-claro); /* Usando variable --verde-claro */
+            color: var(--verde-oscuro); /* Usando variable --verde-oscuro */
+        }
+
+        .filter-dropdown:hover .dropdown-content {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0) translateY(0);
+        }

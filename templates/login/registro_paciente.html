@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Paciente - SaludMe</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4CAF50; /* Verde vibrante */
+            --secondary-color: #F0F8F0; /* Verde muy claro, casi blanco */
+            --text-color: #333;
+            --white-color: #fff;
+            --form-bg-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-medium: rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto; /* Permite scroll para formularios largos */
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .registration-form-container {
+            position: relative;
+            background-color: var(--form-bg-color);
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px var(--shadow-medium);
+            width: 95%;
+            max-width: 700px; /* Más ancho para el formulario de registro */
+            text-align: center;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            margin: 30px auto; /* Margen superior e inferior para evitar que toque los bordes */
+        }
+
+        .registration-form-container h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .form-floating > .form-control {
+            border-radius: 10px;
+        }
+
+        .btn-custom {
+            text-decoration: none;
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            border: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-custom:hover {
+            background-color: var(--white-color);
+            color: var(--primary-color);
+            box-shadow: 0 4px 15px var(--shadow-light);
+            transform: translateY(-2px);
+            border: 1px solid var(--primary-color);
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            font-size: 0.9em;
+            text-align: left;
+            margin-top: 5px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .registration-form-container {
+                padding: 25px 15px;
+                margin: 20px auto;
+            }
+            .registration-form-container h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+            .btn-custom {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="background-container"></div>
+<div class="registration-form-container">
+    <h1 class="text-center">Registro de Paciente</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('auth.registro_paciente') }}" method="POST" class="needs-validation" novalidate>
+        <h2 class="text-start mb-3" style="color: var(--primary-color); font-size: 1.5em;">Datos de Usuario</h2>
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Correo Electrónico" required>
+                    <label for="email">Correo Electrónico</label>
+                    <div class="invalid-feedback">Por favor, ingresa un correo electrónico válido.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Contraseña" required>
+                    <label for="password">Contraseña</label>
+                    <div class="invalid-feedback">Por favor, ingresa tu contraseña.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="tel" class="form-control" name="telefono_usuario" id="telefono_usuario" placeholder="Teléfono" pattern="[0-9]{10}" title="Debe ser un número de 10 dígitos">
+                    <label for="telefono_usuario">Teléfono (Opcional)</label>
+                    <div class="invalid-feedback">Por favor, ingresa un número de teléfono válido (10 dígitos).</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-start mb-3" style="color: var(--primary-color); font-size: 1.5em;">Datos de Paciente</h2>
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="nombres" id="nombres" placeholder="Nombres" required>
+                    <label for="nombres">Nombres</label>
+                    <div class="invalid-feedback">Por favor, ingresa tus nombres.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="apellidos" id="apellidos" placeholder="Apellidos" required>
+                    <label for="apellidos">Apellidos</label>
+                    <div class="invalid-feedback">Por favor, ingresa tus apellidos.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control {% if 'cedula ya está registrada' in message %}is-invalid{% endif %}" name="cedula" id="cedula" placeholder="Cédula" required>
+                    <label for="cedula">Cédula</label>
+                    <div class="invalid-feedback">
+                        {% if 'cedula ya está registrada' in message %}
+                            {{ message }}
+                        {% else %}
+                            Por favor, ingresa tu cédula.
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <select class="form-select" name="sexo" id="sexo">
+                        <option value="">Seleccionar...</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <label for="sexo">Sexo</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-floating">
+                    <input type="number" step="0.1" min="30" max="300" class="form-control" name="peso" id="peso" placeholder="Peso (kg)" required>
+                    <label for="peso">Peso (kg)</label>
+                    <div class="invalid-feedback">Ingresa un peso válido entre 30 y 300 kg.</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-floating">
+                    <input type="number" step="0.01" min="1.0" max="2.5" class="form-control" name="altura" id="altura" placeholder="Altura (m)" required>
+                    <label for="altura">Altura (m)</label>
+                    <div class="invalid-feedback">Ingresa una altura válida entre 1.0 y 2.5 m.</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-floating">
+                    <input type="number" min="1" max="120" class="form-control" name="edad" id="edad" placeholder="Edad" required>
+                    <label for="edad">Edad</label>
+                    <div class="invalid-feedback">Ingresa una edad válida entre 1 y 120 años.</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-floating">
+                    <textarea class="form-control" name="objetivo" id="objetivo" placeholder="Objetivo" style="height: 80px;"></textarea>
+                    <label for="objetivo">Objetivo</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-floating">
+                    <input type="text" class="form-control" name="antecedente_alergia" id="antecedente_alergia" placeholder="Antecedentes de Alergias">
+                    <label for="antecedente_alergia">Antecedentes de Alergias</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-floating">
+                    <select class="form-select" name="nivel_actividad" id="nivel_actividad">
+                        <option value="">Seleccionar...</option>
+                        <option value="Sedentario">Sedentario</option>
+                        <option value="Moderado">Moderado</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Muy Activo">Muy Activo</option>
+                    </select>
+                    <label for="nivel_actividad">Nivel de Actividad</label>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn-custom">Registrarse</button>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary rounded-pill">Volver al Login</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('.needs-validation');
+    form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    }, false);
+});
+</script>

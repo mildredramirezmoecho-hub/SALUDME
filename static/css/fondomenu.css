@@ -1,0 +1,91 @@
+.cuadrocafe{
+    position: relative;
+    background-color:  #729c81f1 ;
+    padding: 50px 40px 100px 80px;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    height: 30%; /* Permite que el contenido defina la altura */
+    width: 90%;
+    margin: 120px auto 40px auto; /* Centrado horizontalmente */
+    margin-top: 50px; /* Espacio superior */
+    margin-bottom: 40px; /* Espacio debajo */
+    left: -200px; /* Ajusta según el diseño */
+    display: block;
+}
+
+
+
+/* Espacio extra entre secciones */
+.categorias-section {
+    margin-top: 0 !important; /* Elimina margen superior excesivo */
+    margin-bottom: 40px;
+}
+
+
+
+.container {
+    text-align: center;
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+    padding: 50px 50px;
+    display: block;
+}
+
+
+
+.container h1{
+    top: 20px;
+    position: relative;
+    font-size: 4rem;
+    color: #f6f5f5;
+    font-weight: 550;
+    left: 17%;
+    width: fit-content;
+}
+.container h2 {
+    left: 60px;
+    position: relative;
+    font-size: 3.2rem;
+    font-weight: 520;
+    color: #f6f5f5;
+    width: 70%;
+    margin-left: -5%;
+}
+
+.container p {
+    position: relative;
+    max-width: 60%;
+    padding: 50px 50px;
+    color: var(--negro);
+    font-size: 1.2rem;
+    right: 180px;
+    top: 10px;
+    margin: 20px auto ;
+}
+
+button.btn-custom {
+    position: relative;
+    bottom: 10px;
+    background-color: #4d8662f1;
+    color: var(--primary-color);
+    max-width: 650px;
+    padding: 12px 18px;
+    border-radius: 50px;
+    font-size: 1.1em;
+    border: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin: 20px 0 0 350px; /* Alineado un poco más a la derecha */
+    display: block;
+    box-shadow: 0 4px 15px var(--negro);
+}
+
+button.btn-custom:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    box-shadow: 0 4px 15px var(--shadow-light);
+    transform: translateY(-2px);
+    border: 1px solid var(--white-color);
+}
